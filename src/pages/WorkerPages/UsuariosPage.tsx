@@ -1,13 +1,11 @@
 // src/pages/UsuariosPage.tsx
 import { useEffect, useState } from "react";
 import { Usuario } from "@/hooks/useUsuariosColumns";
-import { useUsuariosColumns } from "@/hooks/useUsuariosColumns";
 import { DataTableUsuarios } from "@/components/data-table-usuarios";
 
 export default function UsuariosPage() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [selectedRows, setSelectedRows] = useState<Usuario[]>([]);
-  const columns = useUsuariosColumns();
+
 
   const fetchUsuarios = async () => {
     try {
@@ -30,7 +28,6 @@ export default function UsuariosPage() {
       </div>
       <DataTableUsuarios 
         data={usuarios} 
-        onSelectedRowsChange={setSelectedRows} 
         onRefreshUsuarios={fetchUsuarios} 
       />
     </div>

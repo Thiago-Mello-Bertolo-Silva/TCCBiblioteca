@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Livro } from "@/hooks/useLivrosColumns";
+import { useAuth } from "@/contexts/authContext"; 
 
 interface DeleteLivrosDialogProps {
   selectedLivro: Livro | null;
@@ -11,6 +12,7 @@ interface DeleteLivrosDialogProps {
 
 export function DeleteLivrosDialog({ selectedLivro, onLivroDeleted }: DeleteLivrosDialogProps) {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth(); 
 
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
@@ -34,6 +36,11 @@ export function DeleteLivrosDialog({ selectedLivro, onLivroDeleted }: DeleteLivr
       console.error("Erro ao enviar requisição de deleção:", error);
     }
   };
+
+  // ✅ Só renderiza se for admin
+  if (user?.cargo !== "admin") {
+    return null;
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

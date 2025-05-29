@@ -12,10 +12,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Emprestimo } from "@/hooks/useEmprestimosColumns";
 import { Usuario } from "@/types/Usuario";
 import { Livro } from "@/types/Livro";
+import { useAuth } from "@/contexts/authContext";
 
 interface EditEmprestimosDialogProps {
   selectedEmprestimo: Emprestimo | null;
@@ -26,13 +33,14 @@ export function EditEmprestimosDialog({
   selectedEmprestimo,
   onEmprestimoUpdated,
 }: EditEmprestimosDialogProps) {
+  const { user } = useAuth(); // ✅ Hook de autenticação
   const [open, setOpen] = useState(false);
   const [usuarioBusca, setUsuarioBusca] = useState("");
   const [livroBusca, setLivroBusca] = useState("");
   const [usuarioId, setUsuarioId] = useState("");
   const [livroId, setLivroId] = useState("");
   const [dataInicio, setDataInicio] = useState<string>("");
-  const [dataEmprestimo, setDataEmprestimo] = useState<string>("");
+  const [dataPrevistoDevolucao, setDataPrevistoDevolucao] = useState<string>("");
   const [status, setStatus] = useState<string>("emprestado");
 
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
@@ -63,7 +71,7 @@ export function EditEmprestimosDialog({
       setUsuarioBusca(usuario?.nome || "");
       setLivroBusca(livro?.titulo || "");
       setDataInicio(String(selectedEmprestimo.dataInicio));
-      setDataEmprestimo(String(selectedEmprestimo.dataEmprestimo));
+      setDataPrevistoDevolucao(String(selectedEmprestimo.dataPrevistoDevolucao));
       setStatus(selectedEmprestimo.status || "emprestado");
     }
   };
@@ -78,7 +86,7 @@ export function EditEmprestimosDialog({
         usuarioId: Number(usuarioId),
         livroId: Number(livroId),
         dataInicio,
-        dataEmprestimo,
+        dataPrevistoDevolucao,
         status,
       }),
     });
@@ -94,6 +102,9 @@ export function EditEmprestimosDialog({
   const livrosFiltrados = livros.filter((livro) =>
     livro.titulo.toLowerCase().includes(livroBusca.toLowerCase())
   );
+
+  // ✅ Verificação: só exibe botão se usuário for admin
+  if (!user || user.cargo !== "admin") return null;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -179,7 +190,7 @@ export function EditEmprestimosDialog({
           </div>
           <div className="grid gap-2">
             <Label>Data Prevista de Devolução</Label>
-            <Input type="date" value={dataEmprestimo} onChange={(e) => setDataEmprestimo(e.target.value)} />
+            <Input type="date" value={dataPrevistoDevolucao} onChange={(e) => setDataPrevistoDevolucao(e.target.value)} />
           </div>
 
           {/* Status */}

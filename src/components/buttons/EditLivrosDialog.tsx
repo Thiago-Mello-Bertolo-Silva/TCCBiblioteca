@@ -11,8 +11,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Livro } from "@/hooks/useLivrosColumns";
+import { useAuth } from "@/contexts/authContext"; 
 
 interface EditLivroDialogProps {
   selectedLivro: Livro | null;
@@ -20,6 +27,7 @@ interface EditLivroDialogProps {
 }
 
 export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDialogProps) {
+  const { user } = useAuth(); 
   const [open, setOpen] = useState(false);
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
@@ -70,13 +78,18 @@ export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDia
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button disabled={!selectedLivro}>Editar Livro</Button>
-      </DialogTrigger>
+      {user?.cargo === "admin" && ( // 👈 Só mostra o botão para admin
+        <DialogTrigger asChild>
+          <Button disabled={!selectedLivro}>Editar Livro</Button>
+        </DialogTrigger>
+      )}
+
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Editar Livro</DialogTitle>
-          <DialogDescription>Altere as informações desejadas e clique em salvar.</DialogDescription>
+          <DialogDescription>
+            Altere as informações desejadas e clique em salvar.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
@@ -101,7 +114,9 @@ export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDia
             <Input
               placeholder="Ano de Publicação"
               value={anoPublicacao}
-              onChange={(e) => setAnoPublicacao(e.target.value.replace(/\D/g, ""))}
+              onChange={(e) =>
+                setAnoPublicacao(e.target.value.replace(/\D/g, ""))
+              }
               maxLength={4}
             />
           </div>

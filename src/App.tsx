@@ -1,5 +1,4 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Footer from './components/ui/footer';
 import nuvemBibliotecaLogo from './assets/nuvemBiblioteca.png';
 import './styles/App.css';
 import LoginForm from './components/loginForm';
@@ -9,10 +8,6 @@ export default function App() {
   const location = useLocation();
   const successMessage = location.state?.message;
 
-  const policyLinks = [
-    { name: 'Cookie Policy', url: '/cookie-policy' },
-    { name: 'Cookie Preferences', url: '/cookie-preferences' }
-  ];
 
   return (
     <AuthProvider>
@@ -54,7 +49,7 @@ export default function App() {
                     <LoginForm />
                   </div>
 
-                  <Footer socialLinks={[]} policyLinks={policyLinks} />
+
                 </div>
               </div>
             </div>

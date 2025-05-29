@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/authContext';
 
 export default function UserSettingsForm() {
   const { user, setUser } = useAuth();
@@ -22,7 +22,12 @@ export default function UserSettingsForm() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
+
+  if (!user) {
+    alert("Usuário não autenticado.");
+    return;
+  }
 
     try {
       // Atualiza informações básicas
@@ -33,14 +38,6 @@ export default function UserSettingsForm() {
         senha: formData.senha,
       });
 
-      // Atualiza imagem de perfil se houver nova imagem
-      if (formData.novaImagem) {
-        const formImage = new FormData();
-        formImage.append('foto', formData.novaImagem);
-        await axios.post(`http://localhost:3000/usuarios/${user.id}/foto`, formImage, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-      }
 
       alert('Dados atualizados com sucesso!');
       // Opcional: atualizar o estado do usuário global
@@ -58,7 +55,6 @@ export default function UserSettingsForm() {
       <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" />
       <input type="text" name="telefone" value={formData.telefone} onChange={handleChange} placeholder="Telefone" />
       <input type="password" name="senha" value={formData.senha} onChange={handleChange} placeholder="Nova senha" />
-      <input type="file" name="novaImagem" onChange={handleChange} accept="image/*" />
       <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Salvar Alterações</button>
     </form>
   );

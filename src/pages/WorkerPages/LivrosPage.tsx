@@ -1,12 +1,10 @@
 // src/pages/LivrosPage.tsx
 import { useEffect, useState } from "react";
 import { Livro } from "@/hooks/useLivrosColumns";
-import { useLivrosColumns } from "@/hooks/useLivrosColumns";
 import { DataTableLivros } from "@/components/data-table-livros";
 
 export default function LivrosPage() {
   const [livros, setLivros] = useState<Livro[]>([]);
-  const columns = useLivrosColumns();
 
   const fetchLivros = async () => {
     try {

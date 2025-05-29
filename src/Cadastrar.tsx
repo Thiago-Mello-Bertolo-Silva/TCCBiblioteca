@@ -1,13 +1,8 @@
-import Footer from './components/ui/footer';
 import nuvemBibliotecaLogo from './assets/nuvemBiblioteca.png';
 import bibliotecaBg from './assets/bibliotecaBg.png';
 import CadastroForm from './components/cadastroForm';
 
 export default function Cadastro() {
-  const policyLinks = [
-    { name: 'Cookie Policy', url: '/cookie-policy' },
-    { name: 'Cookie Preferences', url: '/cookie-preferences' }
-  ];
 
   return (
     <div className="h-screen w-screen grid grid-cols-1 md:grid-cols-2">
@@ -22,7 +17,6 @@ export default function Cadastro() {
           <CadastroForm />
         </div>
 
-        <Footer socialLinks={[]} policyLinks={policyLinks} />
       </div>
     </div>
   );

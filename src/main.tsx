@@ -7,6 +7,7 @@ import Cadastro from './Cadastrar.tsx';
 import Recuperacao from './Recuperacao';
 import NovaSenha from './NovaSenha';
 import { HomePage } from './pages/Home/HomePage.tsx';
+import { WelcomePage } from './pages/Home/WelcomePage.tsx';
 import Layout from './components/Layout.tsx';
 import UsuariosPage from './pages/WorkerPages/UsuariosPage.tsx';
 import { AuthProvider } from './contexts/authContext';
@@ -26,11 +27,12 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/Recuperacao" element={<Recuperacao />} />
             <Route path="/nova-senha/:token" element={<NovaSenha />} />
             <Route element={<Layout />}>
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/Usuarios" element={<UsuariosPage />} />
-              <Route path="/Livros" element={<LivrosPage />} />
-              <Route path="/Emprestimos" element={<EmprestimosPage />} />
-              <Route path="/configuracoes" element={<ConfiguracaoPage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/Welcome" element={<WelcomePage />} />
+            <Route path="/Usuarios" element={<UsuariosPage />} />
+            <Route path="/Livros" element={<LivrosPage />} />
+            <Route path="/Emprestimos" element={<EmprestimosPage />} />
+            <Route path="/configuracoes" element={<ConfiguracaoPage />} />
             </Route>
           </Routes>
         </ThemeProvider>

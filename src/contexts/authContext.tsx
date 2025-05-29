@@ -1,22 +1,25 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
-type User = {
+export interface User {
   id: number;
   nome: string;
   email: string;
+  telefone: string;
   cargo: string;
-};
+}
 
 type AuthContextType = {
   user: User | null;
   setUser: (user: User | null) => void;
+  isLoading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -29,10 +32,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null);
       }
     }
+    setIsLoading(false);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

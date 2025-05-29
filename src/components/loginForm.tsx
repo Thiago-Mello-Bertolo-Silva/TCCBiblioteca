@@ -2,8 +2,9 @@ import { useState, FormEvent, useRef } from 'react';
 import { CiLock } from "react-icons/ci";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { useNavigate } from 'react-router';
-import { useAuth } from '@/contexts/authContext'; // 👈 Importa o hook de autenticação
-import { jwtDecode } from 'jwt-decode'; // 👈 Para decodificar o token
+import { useAuth } from '@/contexts/authContext'; // Importa o hook de autenticação
+import { jwtDecode } from 'jwt-decode'; // Para decodificar o token
+import type { User } from '@/contexts/authContext';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
@@ -13,7 +14,7 @@ export default function LoginForm() {
   const inputLgnRef = useRef<HTMLInputElement | null>(null);
   const inputPswdRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
-  const { setUser } = useAuth(); // 👈 Para atualizar o contexto após login
+  const { setUser } = useAuth(); 
 
   const handleSubmit = async (evento: FormEvent<HTMLFormElement>) => {
     evento.preventDefault();
@@ -59,10 +60,10 @@ export default function LoginForm() {
       localStorage.setItem('token', data.token);
 
       // 👇 Decodifica e atualiza o contexto
-      const decodedUser = jwtDecode(data.token);
-      setUser(decodedUser);
+      const decodedUser = jwtDecode<User>(data.token);
+    setUser(decodedUser); 
 
-      navigate('/home');
+      navigate('/Welcome');
     } catch (error) {
       console.error('Erro no login:', error);
       setPasswordError('Erro de conexão. Tente novamente.');
@@ -101,10 +102,10 @@ export default function LoginForm() {
           {passwordError && <p className='text-red-500 text-xs'>{passwordError}</p>}
 
           <button
-            className='w-full h-[3em] rounded-md text-white bg-[#00031f] cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#1a1d50] hover:shadow-lg hover:scale-105'
+            className='w-full h-[3em] rounded-md dark:text-white bg-[#00031f] cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#1a1d50] hover:shadow-lg hover:scale-105 light:text-black'
             type='submit'
           >
-            Log in
+            Login
           </button>
         </div>
       </form>

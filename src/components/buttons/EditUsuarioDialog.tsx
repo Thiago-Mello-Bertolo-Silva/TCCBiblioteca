@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Usuario } from "@/hooks/useUsuariosColumns";
+import { useAuth } from "@/contexts/authContext"; 
 
 interface EditUsuarioDialogProps {
   selectedUser: Usuario | null;
@@ -13,6 +14,7 @@ interface EditUsuarioDialogProps {
 }
 
 export function EditUsuarioDialog({ selectedUser, onUserUpdated }: EditUsuarioDialogProps) {
+  const { user } = useAuth(); 
   const [open, setOpen] = useState(false);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -62,6 +64,9 @@ export function EditUsuarioDialog({ selectedUser, onUserUpdated }: EditUsuarioDi
       console.error("Erro ao enviar atualização:", error);
     }
   };
+
+  // ⚠️ Apenas admins podem ver o botão
+  if (user?.cargo !== "admin") return null;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

@@ -18,12 +18,18 @@ export interface Emprestimo {
   id: number;
   usuarioId: number;
   livroId: number;
-  nomeUsuario: string; // <- campo já achatado
-  nomeLivro: string;   // <- campo já achatado
-  dataEmprestimo: string;
-  dataDevolucao: string;
+  nomeUsuario: string; 
+  nomeLivro: string;   
+  dataInicio: string;
+  dataPrevistoDevolucao: string;
   status: string;
 }
+
+// Função para formatar datas no formato dd/mm/aaaa
+const formatarData = (dataISO: string) => {
+  const [ano, mes, dia] = dataISO.split("-");
+  return `${dia}/${mes}/${ano}`;
+};
 
 export function useEmprestimosColumns(): ColumnDef<Emprestimo>[] {
   const navigate = useNavigate();
@@ -91,7 +97,7 @@ export function useEmprestimosColumns(): ColumnDef<Emprestimo>[] {
         ),
       },
       {
-        accessorKey: "dataEmprestimo",
+        accessorKey: "dataInicio",
         header: ({ column }) => (
           <Button
             variant="ghost"
@@ -105,12 +111,12 @@ export function useEmprestimosColumns(): ColumnDef<Emprestimo>[] {
         ),
         cell: ({ row }) => (
           <div className="text-center">
-            {new Date(row.getValue("dataEmprestimo")).toLocaleDateString()}
+            {formatarData(row.getValue("dataInicio"))}
           </div>
         ),
       },
       {
-        accessorKey: "dataDevolucao",
+        accessorKey: "dataPrevistoDevolucao",
         header: ({ column }) => (
           <Button
             variant="ghost"
@@ -124,7 +130,7 @@ export function useEmprestimosColumns(): ColumnDef<Emprestimo>[] {
         ),
         cell: ({ row }) => (
           <div className="text-center">
-            {new Date(row.getValue("dataDevolucao")).toLocaleDateString()}
+            {formatarData(row.getValue("dataPrevistoDevolucao"))}
           </div>
         ),
       },

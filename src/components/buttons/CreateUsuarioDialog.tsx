@@ -5,12 +5,14 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuth } from "@/contexts/authContext"; 
 
 interface CreateUsuarioDialogProps {
   onUsuarioCriado: () => void;
 }
 
 export function CreateUsuarioDialog({ onUsuarioCriado }: CreateUsuarioDialogProps) {
+  const { user, isLoading } = useAuth(); // Acessa o usuário autenticado
   const [open, setOpen] = useState(false);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -23,10 +25,10 @@ export function CreateUsuarioDialog({ onUsuarioCriado }: CreateUsuarioDialogProp
   const isFormValid = nome.trim() !== "" && email.trim() !== "" && telefone.trim() !== "" && senha.trim() !== "" && cargo.trim() !== "";
 
   const handleTelefoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, ""); // Remove tudo que não é número
+    let value = e.target.value.replace(/\D/g, "");
 
     if (value.length > 11) {
-      value = value.slice(0, 11); // Limita a 11 números
+      value = value.slice(0, 11);
     }
 
     if (value.length >= 2 && value.length <= 6) {
@@ -67,6 +69,9 @@ export function CreateUsuarioDialog({ onUsuarioCriado }: CreateUsuarioDialogProp
     }
   };
 
+  // Evita mostrar o botão/modal caso não seja admin
+  if (isLoading || !user || user.cargo !== "admin") return null;
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -74,8 +79,8 @@ export function CreateUsuarioDialog({ onUsuarioCriado }: CreateUsuarioDialogProp
       </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
-        <DialogTitle>Novo Usuário</DialogTitle>
-        <DialogDescription>Preencha as informações para cadastrar um novo usuário.</DialogDescription>
+          <DialogTitle>Novo Usuário</DialogTitle>
+          <DialogDescription>Preencha as informações para cadastrar um novo usuário.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">

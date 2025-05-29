@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Usuario } from "@/hooks/useUsuariosColumns";
+import { useAuth } from "@/contexts/authContext"; 
 
 interface DeleteUsuarioDialogProps {
   selectedUser: Usuario | null;
@@ -10,6 +11,7 @@ interface DeleteUsuarioDialogProps {
 }
 
 export function DeleteUsuarioDialog({ selectedUser, onUserDeleted }: DeleteUsuarioDialogProps) {
+  const { user } = useAuth(); 
   const [open, setOpen] = useState(false);
 
   const handleOpenChange = (isOpen: boolean) => {
@@ -34,6 +36,9 @@ export function DeleteUsuarioDialog({ selectedUser, onUserDeleted }: DeleteUsuar
       console.error("Erro ao enviar requisição de deleção:", error);
     }
   };
+
+  // ⚠️ Apenas admins podem ver o botão
+  if (user?.cargo !== "admin") return null;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

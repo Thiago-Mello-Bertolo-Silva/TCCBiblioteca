@@ -16,6 +16,10 @@ import { Button } from "@/components/ui/button"
 
 const navItems = [
   {
+    title: "Página de inicio",
+    url: "/Welcome",
+  },
+  {
     title: "Usuários registrados",
     url: "/Usuarios",
   },

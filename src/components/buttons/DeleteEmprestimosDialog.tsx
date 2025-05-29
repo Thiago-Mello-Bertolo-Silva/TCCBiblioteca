@@ -1,7 +1,9 @@
+// src/components/buttons/DeleteEmprestimosDialog.tsx
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Emprestimo } from "@/hooks/useEmprestimosColumns";
+import { useAuth } from "@/contexts/authContext"; 
 
 interface DeleteEmprestimosDialogProps {
   selectedEmprestimo: Emprestimo | null;
@@ -10,6 +12,7 @@ interface DeleteEmprestimosDialogProps {
 
 export function DeleteEmprestimosDialog({ selectedEmprestimo, onEmprestimoDeleted }: DeleteEmprestimosDialogProps) {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth(); // Pega o usuário logado
 
   const handleDelete = async () => {
     if (!selectedEmprestimo) return;
@@ -29,6 +32,9 @@ export function DeleteEmprestimosDialog({ selectedEmprestimo, onEmprestimoDelete
       console.error("Erro ao enviar requisição de deleção:", error);
     }
   };
+
+  // Só renderiza o botão se o usuário for admin
+  if (user?.cargo !== "admin") return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -1,16 +1,32 @@
 // src/components/buttons/CreateLivrosDialog.tsx
 import { useState } from "react";
-import { Dialog, DialogDescription, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter,} from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogDescription,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useAuth } from "@/contexts/authContext";
 
 interface CreateLivrosDialogProps {
   onLivroCreate: () => void;
 }
 
 export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
+  const { user } = useAuth(); // Pega o usuário logado
   const [open, setOpen] = useState(false);
   const [titulo, setTitulo] = useState("");
   const [autores, setAutores] = useState("");
@@ -69,6 +85,9 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
     }
   };
 
+  // ⚠️ Apenas admins podem ver o botão e o dialog
+  if (user?.cargo !== "admin") return null;
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -110,7 +129,9 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
             <Label>Ano de Publicação</Label>
             <Input
               value={anoPublicacao}
-              onChange={(e) => setAnoPublicacao(e.target.value.replace(/\D/g, ""))}
+              onChange={(e) =>
+                setAnoPublicacao(e.target.value.replace(/\D/g, ""))
+              }
               placeholder="Ex: 2024"
               maxLength={4}
             />
