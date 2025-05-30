@@ -49,8 +49,8 @@ export function EditEmprestimosDialog({
   useEffect(() => {
     async function fetchData() {
       const [usuariosResponse, livrosResponse] = await Promise.all([
-        fetch("http://localhost:3000/usuarios"),
-        fetch("http://localhost:3000/livros"),
+        fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/usuarios`),
+        fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/livros`),
       ]);
       const usuariosData = await usuariosResponse.json();
       const livrosData = await livrosResponse.json();
@@ -79,7 +79,7 @@ export function EditEmprestimosDialog({
   const handleSubmit = async () => {
     if (!selectedEmprestimo) return;
 
-    await fetch(`http://localhost:3000/emprestimo/${selectedEmprestimo.id}`, {
+    await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/emprestimo/${selectedEmprestimo.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

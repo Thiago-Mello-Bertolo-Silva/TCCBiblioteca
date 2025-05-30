@@ -9,7 +9,7 @@ export default function UsuariosPage() {
 
   const fetchUsuarios = async () => {
     try {
-      const response = await fetch("http://localhost:3000/usuarios");
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/usuarios`);
       const data = await response.json();
       setUsuarios(data);
     } catch (error) {

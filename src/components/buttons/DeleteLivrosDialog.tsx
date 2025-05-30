@@ -22,7 +22,7 @@ export function DeleteLivrosDialog({ selectedLivro, onLivroDeleted }: DeleteLivr
     if (!selectedLivro) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/livro/${selectedLivro.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/livro/${selectedLivro.id}`, {
         method: "DELETE",
       });
 

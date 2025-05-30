@@ -20,7 +20,7 @@ export function UploadFotoPerfil({ userId, fotoAtual, onUploadSuccess }: UploadF
 
     try {
       setUploading(true);
-      const response = await fetch(`http://localhost:3000/api/usuario/foto/${userId}`, {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/api/usuario/foto/${userId}`, {
         method: 'POST',
         body: formData,
       });
@@ -45,7 +45,7 @@ export function UploadFotoPerfil({ userId, fotoAtual, onUploadSuccess }: UploadF
     <div className="flex flex-col gap-4 items-center">
       {preview && (
         <img
-          src={`http://localhost:3000/${preview}`}
+          src={`${import.meta.env.VITE_PUBLIC_BACKENDURL}/${preview}`}
           alt="Foto de Perfil"
           className="w-32 h-32 rounded-full object-cover border"
         />

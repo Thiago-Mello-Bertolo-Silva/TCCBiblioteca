@@ -26,7 +26,7 @@ export function UserInfoForm() {
       if (!user?.id) return;
 
       try {
-        const res = await axios.get(`http://localhost:3000/usuario/${user.id}`);
+        const res = await axios.get(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/usuario/${user.id}`);
         setUserData({
           nome: res.data.nome,
           email: res.data.email,
@@ -50,7 +50,7 @@ export function UserInfoForm() {
     if (!user?.id) return;
 
     try {
-      await axios.put(`http://localhost:3000/usuario/${user.id}`, {
+      await axios.put(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/usuario/${user.id}`, {
         nome: userData.nome,
         email: userData.email,
         telefone: userData.telefone,

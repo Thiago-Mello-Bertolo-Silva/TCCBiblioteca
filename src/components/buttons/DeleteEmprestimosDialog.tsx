@@ -18,7 +18,7 @@ export function DeleteEmprestimosDialog({ selectedEmprestimo, onEmprestimoDelete
     if (!selectedEmprestimo) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/emprestimo/${selectedEmprestimo.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/emprestimo/${selectedEmprestimo.id}`, {
         method: "DELETE",
       });
 

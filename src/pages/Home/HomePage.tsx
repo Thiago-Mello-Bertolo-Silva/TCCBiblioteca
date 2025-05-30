@@ -35,7 +35,7 @@ export function HomePage() {
     async function fetchMetrics() {
       try {
         await new Promise((resolve) => setTimeout(resolve, 1500));
-        const response = await fetch("http://localhost:3000/dashboard-metrics");
+        const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/dashboard-metrics`);
         if (!response.ok) throw new Error("Erro ao buscar métricas");
         const data: BibliotecaMetrics = await response.json();
         setMetrics(data);

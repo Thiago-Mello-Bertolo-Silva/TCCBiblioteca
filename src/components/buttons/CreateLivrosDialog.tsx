@@ -51,7 +51,7 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/livro", {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/livro`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

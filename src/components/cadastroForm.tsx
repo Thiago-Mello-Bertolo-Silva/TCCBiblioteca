@@ -93,7 +93,7 @@ export default function CadastroForm() {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/enviar-email', {
+            const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/enviar-email`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

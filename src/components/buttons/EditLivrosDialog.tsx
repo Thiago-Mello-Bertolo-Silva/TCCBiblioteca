@@ -52,7 +52,7 @@ export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDia
     if (!selectedLivro) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/livro/${selectedLivro.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/livro/${selectedLivro.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

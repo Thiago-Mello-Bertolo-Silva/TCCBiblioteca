@@ -21,7 +21,7 @@ export default function RecuperacaoForm() {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/esqueci-senha', {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/esqueci-senha`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

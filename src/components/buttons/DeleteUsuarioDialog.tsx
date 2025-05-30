@@ -22,7 +22,7 @@ export function DeleteUsuarioDialog({ selectedUser, onUserDeleted }: DeleteUsuar
     if (!selectedUser) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/usuario/${selectedUser.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/usuario/${selectedUser.id}`, {
         method: "DELETE",
       });
 

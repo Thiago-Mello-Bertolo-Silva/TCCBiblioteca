@@ -21,7 +21,7 @@ export function AreaChartLivros() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch("http://localhost:3000/livros-por-mes");
+        const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/livros-por-mes`);
         if (!response.ok) throw new Error("Erro ao buscar dados");
         const result = await response.json();
         setData(result);

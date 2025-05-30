@@ -7,7 +7,7 @@ export default function EmprestimosPage() {
 
   const fetchEmprestimos = async () => {
     try {
-      const response = await fetch("http://localhost:3000/emprestimos");
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/emprestimos`);
       const data = await response.json();
 
 console.log(data);

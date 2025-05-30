@@ -48,7 +48,7 @@ export function EditUsuarioDialog({ selectedUser, onUserUpdated }: EditUsuarioDi
     if (!selectedUser) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/usuario/${selectedUser.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/usuario/${selectedUser.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nome, email, telefone, senha: senha || undefined, cargo }),

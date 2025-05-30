@@ -31,7 +31,7 @@ export default function UserSettingsForm() {
 
     try {
       // Atualiza informações básicas
-      await axios.put(`http://localhost:3000/usuarios/${user.id}`, {
+      await axios.put(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/usuarios/${user.id}`, {
         nome: formData.nome,
         email: formData.email,
         telefone: formData.telefone,

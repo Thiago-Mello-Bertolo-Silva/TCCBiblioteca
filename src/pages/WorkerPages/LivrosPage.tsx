@@ -8,7 +8,7 @@ export default function LivrosPage() {
 
   const fetchLivros = async () => {
     try {
-      const response = await fetch("http://localhost:3000/livros");
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/livros`);
       const data = await response.json();
       setLivros(data);
     } catch (error) {

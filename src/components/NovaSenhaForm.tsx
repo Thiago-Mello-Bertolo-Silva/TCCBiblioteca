@@ -24,7 +24,7 @@ export default function NovaSenhaForm() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/nova-senha/${token}`, {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/nova-senha/${token}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ novaSenha }),

@@ -42,8 +42,8 @@ export function CreateEmprestimosDialog({ onEmprestimoCriado }: CreateEmprestimo
     async function fetchData() {
       try {
         const [usuariosResponse, livrosResponse] = await Promise.all([
-          fetch("http://localhost:3000/usuarios"),
-          fetch("http://localhost:3000/livros"),
+          fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/usuarios`),
+          fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/livros`),
         ]);
 
         const usuariosData = await usuariosResponse.json();
@@ -64,7 +64,7 @@ export function CreateEmprestimosDialog({ onEmprestimoCriado }: CreateEmprestimo
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/emprestimo", {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/emprestimo`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
