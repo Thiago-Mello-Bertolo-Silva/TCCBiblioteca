@@ -21,7 +21,6 @@ export function UserInfoForm() {
   });
   const [mensagemSucesso, setMensagemSucesso] = useState(false);
 
-  // Buscar dados atuais do usuário
   useEffect(() => {
     const fetchUserInfo = async () => {
       if (!user?.id) return;
@@ -41,13 +40,11 @@ export function UserInfoForm() {
     fetchUserInfo();
   }, [user?.id]);
 
-  // Atualiza o estado local conforme os campos são digitados
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Envia os dados atualizados ao backend
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user?.id) return;
@@ -59,10 +56,7 @@ export function UserInfoForm() {
         telefone: userData.telefone,
       });
 
-      // Atualiza o contexto de usuário com os dados novos
       setUser({ ...user, ...userData });
-
-      // Exibe a mensagem de sucesso no site
       setMensagemSucesso(true);
     } catch (error: any) {
       console.error("Erro ao atualizar usuário:", error);
@@ -73,38 +67,56 @@ export function UserInfoForm() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="w-full max-w-md p-6 rounded-lg overflow-auto">
+      <h2 className="text-2xl font-bold text-green-800 text-center mb-4">Informações do Usuário</h2>
+
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <Input
-          type="text"
-          name="nome"
-          value={userData.nome}
-          onChange={handleChange}
-          placeholder="Nome completo"
-          required
-        />
-        <Input
-          type="email"
-          name="email"
-          value={userData.email}
-          onChange={handleChange}
-          placeholder="Email"
-          required
-        />
-        <Input
-          type="text"
-          name="telefone"
-          value={userData.telefone}
-          onChange={handleChange}
-          placeholder="Telefone"
-          required
-        />
-        <Button type="submit">Salvar alterações</Button>
+        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-green-600">
+          <Input
+            type="text"
+            name="nome"
+            value={userData.nome}
+            onChange={handleChange}
+            placeholder="Nome completo"
+            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
+            required
+          />
+        </div>
+
+        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-green-600">
+          <Input
+            type="email"
+            name="email"
+            value={userData.email}
+            onChange={handleChange}
+            placeholder="Email"
+            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
+            required
+          />
+        </div>
+
+        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-green-600">
+          <Input
+            type="text"
+            name="telefone"
+            value={userData.telefone}
+            onChange={handleChange}
+            placeholder="Telefone"
+            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
+            required
+          />
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full py-3 rounded-lg bg-green-600 text-white font-medium transition-all duration-300 hover:bg-green-500 hover:scale-105 shadow-md"
+        >
+          Salvar alterações
+        </Button>
       </form>
 
-      {/* ✅ Mensagem visual de sucesso */}
       {mensagemSucesso && (
-        <Alert className="bg-green-50 border border-green-600 text-green-800">
+        <Alert className="mt-4 border border-green-600 text-green-800">
           <CheckCircle className="h-5 w-5 text-green-600" />
           <AlertTitle className="font-semibold">Sucesso!</AlertTitle>
           <AlertDescription>

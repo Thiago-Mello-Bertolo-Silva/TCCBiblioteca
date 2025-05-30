@@ -1,33 +1,26 @@
-import nuvemBibliotecaLogo from './assets/nuvemBiblioteca.png';
+import nuvemBibliotecaLogo from './assets/nuvemBiblioteca1.png';
 import RecuperacaoForm from './components/recuperacaoForm';
 
 export default function Recuperacao() {
-
   return (
-    <div className="h-screen w-screen grid grid-cols-1 md:grid-cols-2">
-      {/* Lado esquerdo com imagem de fundo */}
-      <div
-        className="hidden md:block bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage:
-            'url(https://img.freepik.com/free-photo/stack-books-with-library-scene_91128-4301.jpg?semt=ais_hybrid)'
-        }}
-      ></div>
-
-      {/* Lado direito com formulário */}
-      <div className="flex flex-col justify-between items-center bg-white px-8 py-12 shadow-md">
-        <div className="flex flex-col items-center w-full max-w-md">
+    <div
+      className="h-screen w-screen flex items-center justify-center bg-cover bg-center"
+      style={{
+        backgroundImage:
+          'url(https://s2.glbimg.com/oa2VSk88ihiNf1fTa21RJbM9tWE=/smart/e.glbimg.com/og/ed/f/original/2020/07/07/biblioteca-ludica-em-escola-em-curitiba-1.jpg)'
+      }}
+    >
+      <div className="w-full max-w-lg p-8 rounded-xl shadow-2xl bg-white/20 backdrop-blur-md border border-white/30">
+        <div className="flex flex-col items-center gap-6">
           <img
             src={nuvemBibliotecaLogo}
             alt="Nuvem Biblioteca Logo"
-            className="mb-8 h-16 w-auto object-contain"
+            className="h-26 w-auto opacity-90"
           />
 
-          {/* Componente de formulário */}
+          {/* Formulário de Recuperação */}
           <RecuperacaoForm />
         </div>
-
-        {/* Rodapé */}
       </div>
     </div>
   );

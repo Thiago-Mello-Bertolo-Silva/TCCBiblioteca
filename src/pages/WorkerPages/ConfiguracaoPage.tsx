@@ -1,13 +1,13 @@
-import { UserInfoForm } from "@/components/config/UserInfoForm"
-import { PasswordForm } from "@/components/config/PasswordForm"
-import { ThemeToggle } from "@/components/config/ThemeToggle"
+import { UserInfoForm } from "@/components/config/UserInfoForm";
+import { PasswordForm } from "@/components/config/PasswordForm";
+import { ThemeToggle } from "@/components/config/ThemeToggle";
 
 const ConfiguracaoPage = () => {
   return (
-    <div className="max-w-2xl ml-64 p-6 space-y-8">
+    <div className="flex flex-col  overflow-auto px-106 py-4">
       <h1 className="text-2xl font-bold">Configurações</h1>
 
-      <div className="space-y-6">
+      <div className="space-y-6 max-w-2xl">
         <UserInfoForm />
         <PasswordForm />
         <div>
@@ -16,7 +16,7 @@ const ConfiguracaoPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ConfiguracaoPage
+export default ConfiguracaoPage;

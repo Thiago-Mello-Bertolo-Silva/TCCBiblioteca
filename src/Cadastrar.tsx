@@ -1,22 +1,24 @@
-import nuvemBibliotecaLogo from './assets/nuvemBiblioteca.png';
+import nuvemBibliotecaLogo from './assets/nuvemBiblioteca1.png';
 import bibliotecaBg from './assets/bibliotecaBg.png';
 import CadastroForm from './components/cadastroForm';
 
 export default function Cadastro() {
-
   return (
-    <div className="h-screen w-screen grid grid-cols-1 md:grid-cols-2">
-      <div
-        className="hidden md:block bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${bibliotecaBg})` }}
-      ></div>
+    <div
+      className="h-screen w-screen flex items-center justify-center bg-cover bg-center"
+      style={{ backgroundImage: `url(${bibliotecaBg})` }}
+    >
+      <div className="w-full max-w-lg p-8 rounded-xl shadow-2xl bg-white/20 backdrop-blur-md border border-white/30">
+        <div className="flex flex-col items-center gap-6">
+          <img
+            src={nuvemBibliotecaLogo}
+            alt="Nuvem Biblioteca Logo"
+            className="h-26 w-auto opacity-90"
+          />
 
-      <div className="flex flex-col justify-between items-center bg-white px-8 py-12 shadow-md">
-        <div className="flex flex-col items-center w-full max-w-md">
-          <img src={nuvemBibliotecaLogo} alt="Nuvem Biblioteca Logo" className="mb-8 h-16 w-auto object-contain" />
+          {/* Formulário de Cadastro */}
           <CadastroForm />
         </div>
-
       </div>
     </div>
   );

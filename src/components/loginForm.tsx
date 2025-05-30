@@ -2,8 +2,8 @@ import { useState, FormEvent, useRef } from 'react';
 import { CiLock } from "react-icons/ci";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { useNavigate } from 'react-router';
-import { useAuth } from '@/contexts/authContext'; // Importa o hook de autenticação
-import { jwtDecode } from 'jwt-decode'; // Para decodificar o token
+import { useAuth } from '@/contexts/authContext';
+import { jwtDecode } from 'jwt-decode';
 import type { User } from '@/contexts/authContext';
 
 export default function LoginForm() {
@@ -41,28 +41,18 @@ export default function LoginForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          login: email,
-          password: password,
-        }),
+        body: JSON.stringify({ login: email, password: password }),
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
-          setPasswordError('Credenciais inválidas. Verifique e-mail e senha.');
-        } else {
-          setPasswordError('Erro ao tentar logar. Tente novamente.');
-        }
+        setPasswordError(response.status === 401 ? 'Credenciais inválidas. Verifique e-mail e senha.' : 'Erro ao tentar logar. Tente novamente.');
         return;
       }
 
       const data = await response.json();
       localStorage.setItem('token', data.token);
-
-      // 👇 Decodifica e atualiza o contexto
       const decodedUser = jwtDecode<User>(data.token);
-    setUser(decodedUser); 
-
+      setUser(decodedUser); 
       navigate('/Welcome');
     } catch (error) {
       console.error('Erro no login:', error);
@@ -71,55 +61,50 @@ export default function LoginForm() {
   };
 
   return (
-    <div className='flex flex-col items-start gap-[1rem] bg-gray-100 text-black w-[24em] p-[1em_2em_1em_2em] rounded-md shadow-md'>
-      <label className='text-[2em]'>Login</label>
-      <form className='flex flex-col gap-2 w-full' onSubmit={handleSubmit}>
-        <div className='flex flex-col gap-[1.5em] w-full'>
-          <div className='flex gap-2 items-center bg-white px-3 py-2 rounded'>
-            <FaRegCircleUser />
-            <input
-              ref={inputLgnRef}
-              type='text'
-              placeholder='E-mail'
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              className='bg-white border-none text-black w-full focus:outline-none'
-            />
-          </div>
-          {emailError && <p className='text-red-500 text-xs'>{emailError}</p>}
-
-          <div className='flex gap-2 items-center bg-white px-3 py-2 rounded'>
-            <CiLock />
-            <input
-              ref={inputPswdRef}
-              type='password'
-              placeholder='Senha'
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              className='bg-white border-none text-black w-full focus:outline-none'
-            />
-          </div>
-          {passwordError && <p className='text-red-500 text-xs'>{passwordError}</p>}
-
-          <button
-            className='w-full h-[3em] rounded-md dark:text-white bg-[#00031f] cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#1a1d50] hover:shadow-lg hover:scale-105 light:text-black'
-            type='submit'
-          >
-            Login
-          </button>
+    <div className="flex flex-col items-center gap-6 bg-green-200 p-8 rounded-lg shadow-2xl border border-green-600">
+      <h2 className="text-3xl font-bold text-green-900">Acesse sua conta</h2>
+      <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
+        <div className="relative flex items-center gap-2 bg-green-400 px-4 py-2 rounded-lg">
+          <FaRegCircleUser className="text-green-900" />
+          <input
+            ref={inputLgnRef}
+            type="text"
+            placeholder="E-mail"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            className="bg-transparent border-none text-green-900 w-full placeholder-green-900 focus:outline-none"
+          />
         </div>
+        {emailError && <p className="text-red-600 text-sm">{emailError}</p>}
+
+        <div className="relative flex items-center gap-2 bg-green-400 px-4 py-2 rounded-lg">
+          <CiLock className="text-green-900" />
+          <input
+            ref={inputPswdRef}
+            type="password"
+            placeholder="Senha"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            className="bg-transparent border-none text-green-900 w-full placeholder-green-900 focus:outline-none"
+          />
+        </div>
+        {passwordError && <p className="text-red-600 text-sm">{passwordError}</p>}
+
+        <button
+          className="w-full py-3 rounded-lg bg-green-600 text-white font-medium transition-all duration-300 hover:bg-green-500 hover:scale-105 shadow-md"
+          type="submit"
+        >
+          Entrar
+        </button>
       </form>
 
-      <a href="/Cadastrar" className='w-full'>
-        <button
-          type="button"
-          className="w-full mt-2 bg-green-600 text-white py-2 rounded hover:bg-green-500 transition"
-        >
-          Cadastrar
+      <a href="/Cadastrar" className="w-full">
+        <button className="w-full py-3 mt-2 bg-yellow-700 text-white rounded-lg hover:bg-yellow-900 hover:scale-105 transition">
+          Criar conta
         </button>
       </a>
 
-      <div className="text-sm text-gray-600 mt-2 w-full text-center">
+      <div className="text-sm text-green-900 mt-2 w-full text-center">
         Esqueceu sua senha?{' '}
         <a href="/Recuperacao" className="text-blue-700 hover:underline">
           Clique aqui para recuperar

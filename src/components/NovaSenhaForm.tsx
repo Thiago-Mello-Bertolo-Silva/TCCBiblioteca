@@ -50,10 +50,10 @@ export default function NovaSenhaForm() {
   };
 
   return (
-    <div className="flex flex-col items-start gap-[1rem] bg-gray-100 text-black w-[24em] p-[1em_2em] rounded-md shadow-md">
-      <label className="text-[2em]">Nova Senha</label>
+    <div className="flex flex-col items-center gap-6 bg-green-200 p-8 rounded-lg shadow-2xl border border-green-600">
+      <h2 className="text-3xl font-bold text-green-800">Redefinir Senha</h2>
 
-      <p className="text-sm text-gray-600">
+      <p className="text-sm text-green-800 text-center">
         Insira sua nova senha e confirme abaixo para atualizar seu acesso.
       </p>
 
@@ -64,44 +64,40 @@ export default function NovaSenhaForm() {
       )}
 
       {erro && (
-        <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm text-center">
+        <div className="w-full bg-red-100 border border-red-600 text-red-600 px-4 py-2 rounded text-sm text-center">
           {erro}
         </div>
       )}
 
       <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-1">
-          <div className="flex gap-2 items-center bg-white px-3 py-2 rounded">
-            <MdLock />
-            <input
-              ref={senhaRef}
-              type="password"
-              placeholder="Nova senha"
-              value={novaSenha}
-              onChange={(e) => setNovaSenha(e.target.value)}
-              className="bg-white border-none text-black w-full focus:outline-none"
-              required
-            />
-          </div>
+        <div className="relative flex items-center gap-2 bg-green-400 px-4 py-2 rounded-lg">
+          <MdLock className="text-white" />
+          <input
+            ref={senhaRef}
+            type="password"
+            placeholder="Nova senha"
+            value={novaSenha}
+            onChange={(e) => setNovaSenha(e.target.value)}
+            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
+            required
+          />
         </div>
 
-        <div className="flex flex-col gap-1">
-          <div className="flex gap-2 items-center bg-white px-3 py-2 rounded">
-            <MdLock />
-            <input
-              type="password"
-              placeholder="Confirmar nova senha"
-              value={confirmarSenha}
-              onChange={(e) => setConfirmarSenha(e.target.value)}
-              className="bg-white border-none text-black w-full focus:outline-none"
-              required
-            />
-          </div>
+        <div className="relative flex items-center gap-2 bg-green-400 px-4 py-2 rounded-lg">
+          <MdLock className="text-white" />
+          <input
+            type="password"
+            placeholder="Confirmar nova senha"
+            value={confirmarSenha}
+            onChange={(e) => setConfirmarSenha(e.target.value)}
+            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
+            required
+          />
         </div>
 
         <button
           type="submit"
-          className="w-full h-[3em] rounded-md text-white bg-blue-900 cursor-pointer transition-all duration-300 ease-in-out hover:bg-blue-800 hover:shadow-lg hover:scale-105"
+          className="w-full py-3 rounded-lg bg-green-600 text-white font-medium transition-all duration-300 hover:bg-green-500 hover:scale-105 shadow-md"
         >
           Redefinir Senha
         </button>

@@ -1,4 +1,3 @@
-// src/components/app-sidebar.tsx
 import * as React from "react"
 import {
   Sidebar,
@@ -15,22 +14,10 @@ import { useAuth } from "@/contexts/authContext"
 import { Button } from "@/components/ui/button"
 
 const navItems = [
-  {
-    title: "Página de inicio",
-    url: "/Welcome",
-  },
-  {
-    title: "Usuários registrados",
-    url: "/Usuarios",
-  },
-  {
-    title: "Coleção de livros",
-    url: "/Livros",
-  },
-  {
-    title: "Lívros emprestados",
-    url: "/Emprestimos",
-  },
+  { title: "Página de Início", url: "/Welcome" },
+  { title: "Usuários Registrados", url: "/Usuarios" },
+  { title: "Coleção de Livros", url: "/Livros" },
+  { title: "Livros Emprestados", url: "/Emprestimos" },
 ]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -41,22 +28,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const handleLogout = () => {
     localStorage.removeItem("token")
     setUser(null)
-    navigate("/") 
+    navigate("/")
   }
 
   return (
-    <Sidebar {...props}>
-      <SidebarHeader>
+    <Sidebar
+      {...props}
+      className="bg-background text-foreground border-r border-border shadow-xl"
+    >
+      <SidebarHeader className="px-4 py-3 border-b border-border">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link to="/home">
-                <div className="flex size-8 items-center rounded-lg bg-blue text-sidebar-primary-foreground">
-                  <img src="/logoBiblioteca.png" alt="Biblioteca Logo" />
-                </div>
+              <Link to="/home" className="flex items-center gap-3">
+                <img
+                  src="/logoBiblioteca1.png"
+                  alt="Biblioteca Logo"
+                  className="h-10 w-auto opacity-90"
+                />
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Nuvem</span>
-                  <span className="truncate text-xs">Biblioteca digital</span>
+                  <span className="font-bold text-primary">Carvalho</span>
+                  <span className="text-primary text-muted">Biblioteca Digital</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -64,7 +56,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent className="gap-0">
+      <SidebarContent className="gap-0 px-3 py-4">
         <SidebarMenu>
           {navItems.map((item) => {
             const isActive = location.pathname === item.url
@@ -73,7 +65,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   asChild
                   isActive={isActive}
-                  className={isActive ? "text-bold text-blue-500" : ""}
+                  className={`px-4 py-2 rounded-md transition-all duration-300 ${
+                    isActive ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-green-400"
+                  }`}
                 >
                   <Link to={item.url}>{item.title}</Link>
                 </SidebarMenuButton>
@@ -83,24 +77,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter className="flex flex-col gap-2 px-2 pb-4">
-        {/* Botões fixos acima do perfil */}
+      <SidebarFooter className="flex flex-col gap-3 px-4 py-4 border-t border-border">
         <Button
           variant="ghost"
-          className="justify-start w-full"
+          className="justify-start w-full text-primary hover:text-primary-hover hover:bg-green-400 transition-all duration-300"
           onClick={() => navigate("/configuracoes")}
         >
           Configuração
         </Button>
         <Button
           variant="ghost"
-          className="justify-start w-full text-red-500"
+          className="justify-start w-full text-red-700 hover:text-destructive-hover hover:bg-red-500 transition-all duration-300"
           onClick={handleLogout}
         >
           Logout
         </Button>
 
-        {/* Perfil do usuário */}
         <NavUser
           user={{
             name: user?.nome || "Usuário",

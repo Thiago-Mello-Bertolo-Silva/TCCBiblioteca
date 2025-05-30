@@ -1,4 +1,3 @@
-// src/components/RecuperacaoForm.tsx
 import { useState, useRef, FormEvent } from 'react';
 import { MdOutlineEmail } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -50,10 +49,10 @@ export default function RecuperacaoForm() {
   };
 
   return (
-    <div className='flex flex-col items-start gap-[1rem] bg-gray-100 text-black w-[24em] p-[1em_2em] rounded-md shadow-md'>
-      <label className='text-[2em]'>Recuperar Senha</label>
+    <div className="flex flex-col items-center gap-6 bg-green-200 p-8 rounded-lg shadow-2xl border border-green-600">
+      <h2 className="text-3xl font-bold text-green-800">Recuperar Senha</h2>
 
-      <p className="text-sm text-gray-600">
+      <p className="text-sm text-green-800 text-center">
         Para recuperar o acesso à sua conta, informe seu e-mail abaixo. Enviaremos um link com instruções para redefinir sua senha.
       </p>
 
@@ -63,35 +62,31 @@ export default function RecuperacaoForm() {
         </div>
       )}
 
-      <form className='flex flex-col gap-4 w-full' onSubmit={handleSubmit}>
-        <div className='flex flex-col gap-1'>
-          <div className='flex gap-2 items-center bg-white px-3 py-2 rounded'>
-            <MdOutlineEmail />
-            <input
-              ref={emailRef}
-              type='email'
-              placeholder='E-mail'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className='bg-white border-none text-black w-full focus:outline-none'
-            />
-          </div>
-          {erroEmail && <p className='text-red-500 text-xs'>{erroEmail}</p>}
+      <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
+        <div className="relative flex items-center gap-2 bg-green-400 px-4 py-2 rounded-lg">
+          <MdOutlineEmail className="text-white" />
+          <input
+            ref={emailRef}
+            type="email"
+            placeholder="E-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
+          />
         </div>
+        {erroEmail && <p className="text-red-400 text-sm">{erroEmail}</p>}
 
         <button
-          type='submit'
-          className='w-full h-[3em] rounded-md text-white bg-blue-900 cursor-pointer transition-all duration-300 ease-in-out hover:bg-blue-800 hover:shadow-lg hover:scale-105'
+          type="submit"
+          className="w-full py-3 rounded-lg bg-green-600 text-white font-medium transition-all duration-300 hover:bg-green-500 hover:scale-105 shadow-md"
         >
           Enviar recuperação
         </button>
       </form>
 
-      <div className="text-sm text-gray-600 mt-2 w-full text-center">
+      <div className="text-sm text-black mt-2 w-full text-center">
         Lembrou sua senha?{' '}
-        <a href="/" className="text-blue-700 hover:underline">
-          Faça login
-        </a>
+        <a href="/" className="text-blue-700 hover:underline">Faça login</a>
       </div>
     </div>
   );

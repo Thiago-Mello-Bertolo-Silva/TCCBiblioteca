@@ -124,8 +124,8 @@ export default function CadastroForm() {
     };
 
     return (
-        <div className='flex flex-col items-start gap-[1rem] bg-gray-100 text-black w-[24em] p-[1em_2em] rounded-md shadow-md'>
-            <label className='text-[2em]'>Cadastro</label>
+        <div className='flex flex-col items-start gap-[1rem] bg-green-200 text-green-900 w-[24em] p-[1em_2em] rounded-md shadow-md border border-green-600'>
+            <label className='text-[2em] font-bold '>Cadastro</label>
 
             {mensagem && (
                 <div
@@ -142,7 +142,7 @@ export default function CadastroForm() {
             <form className='flex flex-col gap-2 w-full' onSubmit={handleSubmit}>
                 <div className='flex flex-col gap-[1.2em]'>
 
-                    <div className='flex gap-2 items-center bg-white px-3 py-2 rounded'>
+                    <div className='flex gap-2 items-center bg-green-400 px-3 py-2 rounded'>
                         <FaRegCircleUser />
                         <input
                             ref={inputRefs.nome}
@@ -150,12 +150,12 @@ export default function CadastroForm() {
                             placeholder='Nome completo'
                             value={nome}
                             onChange={(e) => setNome(e.target.value)}
-                            className='bg-white border-none text-black w-full focus:outline-none'
+                            className='bg-transparent border-none text-green-900 w-full placeholder-green-900 focus:outline-none'
                         />
                     </div>
-                    {errors.nome && <p className='text-red-500 text-xs'>{errors.nome}</p>}
+                    {errors.nome && <p className='text-red-600 text-xs'>{errors.nome}</p>}
 
-                    <div className='flex gap-2 items-center bg-white px-3 py-2 rounded'>
+                    <div className='flex gap-2 items-center bg-green-400 px-3 py-2 rounded'>
                         <MdOutlineEmail />
                         <input
                             ref={inputRefs.email}
@@ -163,12 +163,12 @@ export default function CadastroForm() {
                             placeholder='E-mail'
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className='bg-white border-none text-black w-full focus:outline-none'
+                            className='bg-transparent border-none text-green-900 w-full placeholder-green-900 focus:outline-none'
                         />
                     </div>
-                    {errors.email && <p className='text-red-500 text-xs'>{errors.email}</p>}
+                    {errors.email && <p className='text-red-600 text-xs'>{errors.email}</p>}
 
-                    <div className='flex gap-2 items-center bg-white px-3 py-2 rounded'>
+                    <div className='flex gap-2 items-center bg-green-400 px-3 py-2 rounded'>
                         <MdOutlinePhone />
                         <input
                             ref={inputRefs.telefone}
@@ -176,13 +176,13 @@ export default function CadastroForm() {
                             placeholder='Telefone'
                             value={telefone}
                             onChange={handleTelefoneChange}
-                            className='bg-white border-none text-black w-full focus:outline-none'
+                            className='bg-transparent border-none text-green-900 w-full placeholder-green-900 focus:outline-none'
                             maxLength={15}
                         />
                     </div>
-                    {errors.telefone && <p className='text-red-500 text-xs'>{errors.telefone}</p>}
+                    {errors.telefone && <p className='text-red-600 text-xs'>{errors.telefone}</p>}
 
-                    <div className='flex gap-2 items-center bg-white px-3 py-2 rounded'>
+                    <div className='flex gap-2 items-center bg-green-400 px-3 py-2 rounded'>
                         <CiLock />
                         <input
                             ref={inputRefs.senha}
@@ -190,12 +190,12 @@ export default function CadastroForm() {
                             placeholder='Senha'
                             value={senha}
                             onChange={(e) => setSenha(e.target.value)}
-                            className='bg-white border-none text-black w-full focus:outline-none'
+                            className='bg-transparent border-none text-green-900 w-full placeholder-green-900 focus:outline-none'
                         />
                     </div>
-                    {errors.senha && <p className='text-red-500 text-xs'>{errors.senha}</p>}
+                    {errors.senha && <p className='text-red-600 text-xs'>{errors.senha}</p>}
 
-                    <div className='flex gap-2 items-center bg-white px-3 py-2 rounded'>
+                    <div className='flex gap-2 items-center bg-green-400 px-3 py-2 rounded'>
                         <CiLock />
                         <input
                             ref={inputRefs.confirmarSenha}
@@ -203,13 +203,13 @@ export default function CadastroForm() {
                             placeholder='Confirmar senha'
                             value={confirmarSenha}
                             onChange={(e) => setConfirmarSenha(e.target.value)}
-                            className='bg-white border-none text-black w-full focus:outline-none'
+                            className='bg-transparent border-none text-green-900 w-full placeholder-green-900 focus:outline-none'
                         />
                     </div>
-                    {errors.confirmarSenha && <p className='text-red-500 text-xs'>{errors.confirmarSenha}</p>}
+                    {errors.confirmarSenha && <p className='text-red-600 text-xs'>{errors.confirmarSenha}</p>}
 
                     <button
-                        className='w-full h-[3em] rounded-md text-white bg-green-600 cursor-pointer transition-all duration-300 ease-in-out hover:bg-green-500 hover:shadow-lg hover:scale-105'
+                        className='w-full h-[3em] rounded-md text-white bg-yellow-700 cursor-pointer transition-all duration-300 ease-in-out hover:bg-yellow-900 hover:shadow-lg hover:scale-105'
                         type='submit'
                     >
                         Cadastrar
@@ -217,7 +217,7 @@ export default function CadastroForm() {
                 </div>
             </form>
 
-            <div className="text-sm text-gray-600 mt-2 w-full text-center">
+            <div className="text-sm text-green-900 mt-2 w-full text-center">
                 Já tem uma conta?{' '}
                 <a href="/" className="text-blue-700 hover:underline">
                     Faça login
