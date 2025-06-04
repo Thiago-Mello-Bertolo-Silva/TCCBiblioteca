@@ -1,11 +1,5 @@
 import { Suspense, useEffect, useState, lazy } from "react";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle,} from "@/components/ui/card";
 import { useAuth } from "@/contexts/authContext";
 
 const AreaChartLivros = lazy(() =>
