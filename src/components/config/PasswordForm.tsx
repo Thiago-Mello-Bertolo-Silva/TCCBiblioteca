@@ -13,32 +13,32 @@ export const PasswordForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md p-6 rounded-lg">
-      <h2 className="text-2xl font-bold text-green-800 text-center mb-4">Alterar Senha</h2>
+      <h2 className="text-2xl font-bold text-blue-400 text-center mb-4">Alterar Senha</h2>
 
       <div className="flex flex-col gap-4">
-        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-green-600">
+        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-blue-500">
           <Input
             type="password"
             placeholder="Senha atual"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
-            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
+            className="bg-transparent border-none text-blue-500 w-full placeholder-blue-800 focus:outline-none"
           />
         </div>
 
-        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-green-600">
+        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-blue-600">
           <Input
             type="password"
             placeholder="Nova senha"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
+            className="bg-transparent border-none text-blue-600 w-full placeholder-blue-600 focus:outline-none"
           />
         </div>
 
         <Button
           type="submit"
-          className="w-full py-3 rounded-lg bg-green-600 text-white font-medium transition-all duration-300 hover:bg-green-500 hover:scale-105 shadow-md"
+          className="w-full py-3 rounded-lg bg-blue-600 text-white font-medium transition-all duration-300 hover:bg-blue-500 hover:scale-105 shadow-md"
         >
           Atualizar senha
         </Button>

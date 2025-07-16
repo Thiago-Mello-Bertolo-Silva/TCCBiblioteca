@@ -18,8 +18,8 @@ export interface Emprestimo {
   id: number;
   usuarioId: number;
   livroId: number;
-  nomeUsuario: string; 
-  nomeLivro: string;   
+  nomeUsuario: string;
+  nomeLivro: string;
   dataInicio: string;
   dataPrevistoDevolucao: string;
   status: string;
@@ -136,14 +136,34 @@ export function useEmprestimosColumns(): ColumnDef<Emprestimo>[] {
       },
       {
         accessorKey: "status",
-        header: "Status",
-        cell: ({ row }) => (
-          <div className="text-center">
-            {row.getValue("status") === "Concluído"
-              ? "✅ Concluído"
-              : "📚 Em andamento"}
-          </div>
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            onClick={() =>
+              column.toggleSorting(column.getIsSorted() === "asc")
+            }
+          >
+            Status
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
         ),
+        cell: ({ row }) => {
+          const status = row.getValue("status");
+          return (
+            <div className="text-center">
+              {status === "devolvido" ? "✅ Devolvido" : "📚 Emprestado"}
+            </div>
+          );
+        },
+        sortingFn: (rowA, rowB, columnId) => {
+          const statusA = rowA.getValue(columnId);
+          const statusB = rowB.getValue(columnId);
+
+          // Coloca "devolvido" depois de "emprestado" na ordem ascendente
+          if (statusA === statusB) return 0;
+          if (statusA === "devolvido") return 1;
+          return -1;
+        },
       },
       {
         id: "actions",

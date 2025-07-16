@@ -64,7 +64,7 @@ export function DataTableLivros({ data, onRefreshLivros }: DataTableLivrosProps)
           onChange={(event) =>
             table.getColumn("titulo")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm bg-transparent border border-green-600 text-green-800 focus:ring-green-500 rounded-lg px-4 py-2 shadow-md"
+          className="max-w-sm bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
         />
         <div className="flex gap-4">
           <CreateLivrosDialog onLivroCreate={handleLivroUpdated} />
@@ -78,7 +78,7 @@ export function DataTableLivros({ data, onRefreshLivros }: DataTableLivrosProps)
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="border-green-600 text-green-800 hover:bg-green-300 rounded-lg shadow-md">
+              <Button variant="outline" className="border-blue-600 text-blue-800 hover:bg-blue-300 rounded-lg shadow-md">
                 Colunas <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
@@ -99,9 +99,9 @@ export function DataTableLivros({ data, onRefreshLivros }: DataTableLivrosProps)
       </div>
 
       {/* Tabela aprimorada */}
-      <div className="w-full overflow-hidden rounded-2xl border border-green-600 shadow-lg backdrop-blur-md bg-white/30">
+      <div className="w-full overflow-hidden rounded-2xl border border-blue-600 shadow-lg backdrop-blur-md bg-white/30">
         <Table className="w-full border-collapse">
-          <TableHeader className="bg-green-500 text-white rounded-t-2xl">
+          <TableHeader className="bg-blue-500 text-white rounded-t-2xl">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -132,7 +132,7 @@ export function DataTableLivros({ data, onRefreshLivros }: DataTableLivrosProps)
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-green-800">
+                <TableCell colSpan={columns.length} className="h-24 text-center text-blue-800">
                   Sem resultados.
                 </TableCell>
               </TableRow>
@@ -143,15 +143,15 @@ export function DataTableLivros({ data, onRefreshLivros }: DataTableLivrosProps)
 
       {/* Paginação aprimorada */}
       <div className="flex flex-col sm:flex-row items-center justify-end space-y-2 sm:space-y-0 sm:space-x-2 py-6 px-6">
-        <div className="flex-1 text-sm text-green-600">
+        <div className="flex-1 text-sm text-blue-600">
           {table.getFilteredSelectedRowModel().rows.length} de{" "}
           {table.getFilteredRowModel().rows.length} linha(s) selecionadas.
         </div>
         <div className="flex space-x-3">
-          <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="border-green-600 text-green-800 hover:bg-green-400 shadow-md">
+          <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="border-blue-600 text-blue-800 hover:bg-blue-400 shadow-md">
             Anterior
           </Button>
-          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} className="border-green-600 text-green-800 hover:bg-green-400 shadow-md">
+          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} className="border-blue-600 text-blue-800 hover:bg-blue-400 shadow-md">
             Próxima
           </Button>
         </div>

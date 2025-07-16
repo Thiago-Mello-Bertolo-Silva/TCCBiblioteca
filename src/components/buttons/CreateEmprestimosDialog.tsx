@@ -1,11 +1,32 @@
 // src/components/buttons/CreateEmprestimosDialog.tsx
-import { useState, useEffect } from "react";
-import { Dialog, DialogDescription, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAuth } from "@/contexts/authContext"; 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { useAuth } from "@/contexts/authContext";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  createEmprestimoSchema,
+  CreateEmprestimoFormData,
+} from "@/schemas/createEmprestimoSchema";
 
 interface Usuario {
   id: number;
@@ -21,107 +42,123 @@ interface CreateEmprestimosDialogProps {
   onEmprestimoCriado: () => void;
 }
 
-export function CreateEmprestimosDialog({ onEmprestimoCriado }: CreateEmprestimosDialogProps) {
+export function CreateEmprestimosDialog({
+  onEmprestimoCriado,
+}: CreateEmprestimosDialogProps) {
   const { user } = useAuth();
+
+  /* ------------------------------------------------------------------ */
+  /* form (react‑hook‑form + zod)                                       */
+  /* ------------------------------------------------------------------ */
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<CreateEmprestimoFormData>({
+    resolver: zodResolver(createEmprestimoSchema),
+    defaultValues: {
+      usuarioId: "",
+      livroId: "",
+      dataInicio: "",
+      dataPrevistoDevolucao: "",
+      status: "emprestado",
+    },
+  });
+
   const [open, setOpen] = useState(false);
-  const [usuarioBusca, setUsuarioBusca] = useState("");
-  const [livroBusca, setLivroBusca] = useState("");
-  const [usuarioId, setUsuarioId] = useState<string>("");
-  const [livroId, setLivroId] = useState<string>("");
-  const [dataInicio, setDataInicio] = useState("");
-  const [dataPrevistoDevolucao, setdDataPrevistoDevolucao] = useState(""); 
-  const [status, setStatus] = useState("emprestado");
-  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [livros, setLivros] = useState<Livro[]>([]);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
 
-  const isFormValid = usuarioId && livroId && dataInicio && dataPrevistoDevolucao;
+  /* -------------------- buscas autocompletes ----------------------- */
+  const [usuarioBusca, setUsuarioBusca] = useState("");
+  const [livroBusca, setLivroBusca] = useState("");
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [livros, setLivros] = useState<Livro[]>([]);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [usuariosResponse, livrosResponse] = await Promise.all([
+        const [usuariosRes, livrosRes] = await Promise.all([
           fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/usuarios`),
           fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/livros`),
         ]);
 
-        const usuariosData = await usuariosResponse.json();
-        const livrosData = await livrosResponse.json();
-
-        setUsuarios(usuariosData);
-        setLivros(livrosData);
-      } catch (error) {
-        console.error("Erro ao buscar usuários e livros:", error);
+        setUsuarios(await usuariosRes.json());
+        setLivros(await livrosRes.json());
+      } catch (e) {
+        console.error("Erro ao buscar usuários/livros:", e);
       }
     }
-
     fetchData();
   }, []);
 
-  const handleSubmit = async () => {
-    setErro("");
+  const usuariosFiltrados = usuarios.filter((u) =>
+    u.nome.toLowerCase().includes(usuarioBusca.toLowerCase())
+  );
+  const livrosFiltrados = livros.filter((l) =>
+    l.titulo.toLowerCase().includes(livroBusca.toLowerCase())
+  );
+
+  /* ---------------------------- submit ------------------------------ */
+  const onSubmit = async (data: CreateEmprestimoFormData) => {
     setLoading(true);
+    setErro("");
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/emprestimo`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          usuarioId: Number(usuarioId),
-          livroId: Number(livroId),
-          dataInicio,
-          dataPrevistoDevolucao,
-          status,
-        }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_PUBLIC_BACKENDURL}/emprestimo`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            usuarioId: Number(data.usuarioId),
+            livroId: Number(data.livroId),
+            dataInicio: data.dataInicio,
+            dataPrevistoDevolucao: data.dataPrevistoDevolucao,
+            status: data.status,
+          }),
+        }
+      );
 
-      if (!response.ok) {
-        throw new Error("Livro não está disponível no momento");
-      }
+      if (!res.ok) throw new Error("Livro não está disponível no momento");
 
-      // Resetar formulário
-      setUsuarioBusca("");
-      setLivroBusca("");
-      setUsuarioId("");
-      setLivroId("");
-      setDataInicio("");
-      setdDataPrevistoDevolucao("");
-      setStatus("emprestado");
+      reset();
       setOpen(false);
       onEmprestimoCriado();
-    } catch (err: any) {
-      setErro(err.message || "Erro desconhecido");
+    } catch (e: any) {
+      setErro(e.message || "Erro desconhecido");
     } finally {
       setLoading(false);
     }
   };
 
-  const usuariosFiltrados = usuarios.filter((usuario) =>
-    usuario.nome.toLowerCase().includes(usuarioBusca.toLowerCase())
-  );
-
-  const livrosFiltrados = livros.filter((livro) =>
-    livro.titulo.toLowerCase().includes(livroBusca.toLowerCase())
-  );
-
-  // 🔐 Exibe o botão somente se for admin
-  if (!user || user.cargo !== "admin") {
-    return null;
-  }
+  /* --------------------- somente administradores -------------------- */
+  if (!user || user.cargo !== "admin") return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Cadastrar Novo Empréstimo</Button>
+        <Button>Novo Empréstimo</Button>
       </DialogTrigger>
+
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Novo Empréstimo</DialogTitle>
-          <DialogDescription>Preencha as informações para registrar um novo empréstimo.</DialogDescription>
+          <DialogDescription>
+            Preencha as informações para registrar um novo empréstimo.
+          </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          {/* Campo de busca de Usuário */}
+
+        {/* ---------------------- FORM -------------------------------- */}
+        <form
+          className="grid gap-4 py-4"
+          onSubmit={handleSubmit(onSubmit)}
+          id="form-emprestimo"
+        >
+          {/* Usuário */}
           <div className="grid gap-2 relative">
             <Label>Buscar Usuário</Label>
             <Input
@@ -129,77 +166,101 @@ export function CreateEmprestimosDialog({ onEmprestimoCriado }: CreateEmprestimo
               value={usuarioBusca}
               onChange={(e) => {
                 setUsuarioBusca(e.target.value);
-                setUsuarioId("");
+                setValue("usuarioId", "");
               }}
             />
-            {usuarioBusca && !usuarioId && (
+            {usuarioBusca && !watch("usuarioId") && (
               <div className="absolute z-10 top-full left-0 right-0 border rounded-md max-h-40 overflow-y-auto bg-white shadow dark:bg-zinc-900">
-                {usuariosFiltrados.length > 0 ? (
-                  usuariosFiltrados.map((usuario) => (
+                {usuariosFiltrados.length ? (
+                  usuariosFiltrados.map((u) => (
                     <div
-                      key={usuario.id}
+                      key={u.id}
                       onClick={() => {
-                        setUsuarioBusca(usuario.nome);
-                        setUsuarioId(usuario.id.toString());
+                        setUsuarioBusca(u.nome);
+                        setValue("usuarioId", String(u.id));
                       }}
                       className="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer"
                     >
-                      {usuario.nome}
+                      {u.nome}
                     </div>
                   ))
                 ) : (
-                  <div className="p-2 text-gray-500">Nenhum usuário encontrado</div>
+                  <div className="p-2 text-gray-500">Nenhum usuário</div>
                 )}
               </div>
             )}
+            {errors.usuarioId && (
+              <span className="text-red-500 text-sm">
+                {errors.usuarioId.message}
+              </span>
+            )}
           </div>
 
-          {/* Campo de busca de Livro */}
+          {/* Livro */}
           <div className="grid gap-2 relative">
             <Label>Buscar Livro</Label>
             <Input
-              placeholder="Digite o nome do livro"
+              placeholder="Digite o título do livro"
               value={livroBusca}
               onChange={(e) => {
                 setLivroBusca(e.target.value);
-                setLivroId("");
+                setValue("livroId", "");
               }}
             />
-            {livroBusca && !livroId && (
+            {livroBusca && !watch("livroId") && (
               <div className="absolute z-10 top-full left-0 right-0 border rounded-md max-h-40 overflow-y-auto bg-white shadow dark:bg-zinc-900">
-                {livrosFiltrados.length > 0 ? (
-                  livrosFiltrados.map((livro) => (
+                {livrosFiltrados.length ? (
+                  livrosFiltrados.map((l) => (
                     <div
-                      key={livro.id}
+                      key={l.id}
                       onClick={() => {
-                        setLivroBusca(livro.titulo);
-                        setLivroId(livro.id.toString());
+                        setLivroBusca(l.titulo);
+                        setValue("livroId", String(l.id));
                       }}
                       className="px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer"
                     >
-                      {livro.titulo}
+                      {l.titulo}
                     </div>
                   ))
                 ) : (
-                  <div className="p-2 text-gray-500">Nenhum livro encontrado</div>
+                  <div className="p-2 text-gray-500">Nenhum livro</div>
                 )}
               </div>
             )}
+            {errors.livroId && (
+              <span className="text-red-500 text-sm">
+                {errors.livroId.message}
+              </span>
+            )}
           </div>
 
-          {/* Campos de datas */}
+          {/* Datas */}
           <div className="grid gap-2">
             <Label>Data de Início</Label>
-            <Input type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
+            <Input type="date" {...register("dataInicio")} />
+            {errors.dataInicio && (
+              <span className="text-red-500 text-sm">
+                {errors.dataInicio.message}
+              </span>
+            )}
           </div>
           <div className="grid gap-2">
             <Label>Data Prevista de Devolução</Label>
-            <Input type="date" value={dataPrevistoDevolucao} onChange={(e) => setdDataPrevistoDevolucao(e.target.value)} />
+            <Input type="date" {...register("dataPrevistoDevolucao")} />
+            {errors.dataPrevistoDevolucao && (
+              <span className="text-red-500 text-sm">
+                {errors.dataPrevistoDevolucao.message}
+              </span>
+            )}
           </div>
 
+          {/* Status */}
           <div className="grid gap-2">
             <Label>Status</Label>
-            <Select value={status} onValueChange={setStatus}>
+            <Select
+              value={watch("status")}
+              onValueChange={(val: "emprestado" | "devolvido") => setValue("status", val)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Selecione o status" />
               </SelectTrigger>
@@ -208,12 +269,23 @@ export function CreateEmprestimosDialog({ onEmprestimoCriado }: CreateEmprestimo
                 <SelectItem value="devolvido">Devolvido</SelectItem>
               </SelectContent>
             </Select>
+            {errors.status && (
+              <span className="text-red-500 text-sm">
+                {errors.status.message}
+              </span>
+            )}
           </div>
+        </form>
 
-          {erro && <p className="text-red-500 text-sm">{erro}</p>}
-        </div>
+        {erro && <p className="text-red-500 text-sm">{erro}</p>}
+
         <DialogFooter>
-          <Button onClick={handleSubmit} disabled={loading || !isFormValid}>
+          <Button
+            type="submit"
+            form="form-emprestimo"
+            disabled={loading}
+            className="w-full"
+          >
             {loading ? "Salvando..." : "Salvar"}
           </Button>
         </DialogFooter>

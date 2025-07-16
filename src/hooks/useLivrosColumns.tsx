@@ -118,7 +118,17 @@ export function useLivrosColumns(): ColumnDef<Livro>[] {
     },
     {
       accessorKey: "linkOnline",
-      header: "Link Online",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() =>
+            column.toggleSorting(column.getIsSorted() === "asc")
+          }
+        >
+          Link Online
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => {
         const valor = row.getValue("linkOnline") as string;
         if (!valor) return <div className="text-center text-muted-foreground">—</div>;
@@ -139,15 +149,38 @@ export function useLivrosColumns(): ColumnDef<Livro>[] {
           </div>
         );
       },
+      sortingFn: (rowA, rowB, columnId) => {
+        const a = (rowA.getValue(columnId) as string)?.split(",")[0]?.trim() || "";
+        const b = (rowB.getValue(columnId) as string)?.split(",")[0]?.trim() || "";
+        return a.localeCompare(b);
+      },
     },
     {
       accessorKey: "disponivel",
-      header: "Disponível",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() =>
+            column.toggleSorting(column.getIsSorted() === "asc")
+          }
+        >
+          Disponível
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => (
         <div className="text-center">
           {row.getValue("disponivel") === "Sim" ? "✅ Sim" : "❌ Não"}
         </div>
       ),
+      sortingFn: (rowA, rowB, columnId) => {
+        const a = rowA.getValue(columnId);
+        const b = rowB.getValue(columnId);
+
+        if (a === b) return 0;
+        if (a === "Sim") return 1; // Coloca "Sim" depois na ordem crescente
+        return -1;
+      },
     },
     {
       id: "actions",

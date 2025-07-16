@@ -68,56 +68,56 @@ export function UserInfoForm() {
 
   return (
     <div className="w-full max-w-md p-6 rounded-lg overflow-auto">
-      <h2 className="text-2xl font-bold text-green-800 text-center mb-4">Informações do Usuário</h2>
+      <h2 className="text-2xl font-bold text-blue-400 text-center mb-4">Informações do Usuário</h2>
 
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-green-600">
+        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-blue-600">
           <Input
             type="text"
             name="nome"
             value={userData.nome}
             onChange={handleChange}
             placeholder="Nome completo"
-            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
+            className="bg-transparent border-none text-blue-500 w-full placeholder-blue-500 focus:outline-none"
             required
           />
         </div>
 
-        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-green-600">
+        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-blue-500">
           <Input
             type="email"
             name="email"
             value={userData.email}
             onChange={handleChange}
             placeholder="Email"
-            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
+            className="bg-transparent border-none text-blue-500 w-full placeholder-blue-500 focus:outline-none"
             required
           />
         </div>
 
-        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-green-600">
+        <div className="relative flex items-center gap-3 px-4 py-2 rounded-lg border border-blue-500">
           <Input
             type="text"
             name="telefone"
             value={userData.telefone}
             onChange={handleChange}
             placeholder="Telefone"
-            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
+            className="bg-transparent border-none text-blue-500 w-full placeholder-blue-500 focus:outline-none"
             required
           />
         </div>
 
         <Button
           type="submit"
-          className="w-full py-3 rounded-lg bg-green-600 text-white font-medium transition-all duration-300 hover:bg-green-500 hover:scale-105 shadow-md"
+          className="w-full py-3 rounded-lg bg-blue-600 text-white font-medium transition-all duration-300 hover:bg-blue-500 hover:scale-105 shadow-md"
         >
           Salvar alterações
         </Button>
       </form>
 
       {mensagemSucesso && (
-        <Alert className="mt-4 border border-green-600 text-green-800">
-          <CheckCircle className="h-5 w-5 text-green-600" />
+        <Alert className="mt-4 border border-blue-600 text-blue-800">
+          <CheckCircle className="h-5 w-5 text-blue-600" />
           <AlertTitle className="font-semibold">Sucesso!</AlertTitle>
           <AlertDescription>
             As informações foram atualizadas com sucesso. <br />

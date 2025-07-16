@@ -1,105 +1,106 @@
-import { useState, FormEvent, useRef } from 'react';
-import { MdLock } from 'react-icons/md';
-import { useParams, useNavigate } from 'react-router-dom';
+// src/components/NovaSenhaForm.tsx
+import { useNavigate, useParams } from "react-router-dom";
+import { MdLock } from "react-icons/md";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { novaSenhaSchema, NovaSenhaSchema } from "@/schemas/novaSenhaSchema";
+import { useState } from "react";
 
 export default function NovaSenhaForm() {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
+  const [mensagem, setMensagem] = useState("");
 
-  const [novaSenha, setNovaSenha] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [mensagem, setMensagem] = useState('');
-  const [erro, setErro] = useState('');
-  const senhaRef = useRef<HTMLInputElement | null>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<NovaSenhaSchema>({
+    resolver: zodResolver(novaSenhaSchema),
+  });
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setMensagem('');
-    setErro('');
-
-    if (novaSenha !== confirmarSenha) {
-      setErro('As senhas não coincidem.');
-      senhaRef.current?.focus();
-      return;
-    }
+  async function onSubmit(values: NovaSenhaSchema) {
+    setMensagem("");
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/nova-senha/${token}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ novaSenha }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_PUBLIC_BACKENDURL}/nova-senha/${token}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ novaSenha: values.novaSenha }),
+        }
+      );
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (response.ok) {
-        setMensagem(data.message || 'Senha redefinida com sucesso!');
-        setTimeout(() => {
-          navigate('/', {
-            state: {
-              message: 'Senha redefinida com sucesso! Faça login.'
-            }
-          });
-        }, 4000);
-      } else {
-        setErro(data.message || 'Erro ao redefinir senha.');
+      if (!res.ok) {
+        setMensagem(data.message || "Erro ao redefinir senha.");
+        return;
       }
-    } catch (error) {
-      setErro('Erro de conexão com o servidor.');
+
+      // sucesso
+      reset();
+      setMensagem("Senha redefinida com sucesso! Você será redirecionado...");
+      setTimeout(() => {
+        navigate("/", {
+          state: { message: "Senha redefinida com sucesso! Faça login." },
+        });
+      }, 3500);
+    } catch {
+      setMensagem("Erro de conexão com o servidor.");
     }
-  };
+  }
 
   return (
-    <div className="flex flex-col items-center gap-6 bg-green-200 p-8 rounded-lg shadow-2xl border border-green-600">
-      <h2 className="text-3xl font-bold text-green-800">Redefinir Senha</h2>
-
-      <p className="text-sm text-green-800 text-center">
-        Insira sua nova senha e confirme abaixo para atualizar seu acesso.
-      </p>
+    <div className="flex flex-col items-center gap-6 bg-blue-50 p-8 rounded-lg shadow-2xl border border-blue-600">
+      <h2 className="text-3xl font-bold text-blue-800">Redefinir Senha</h2>
 
       {mensagem && (
-        <div className="w-full bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded text-sm text-center">
+        <p className="w-full text-center text-sm px-4 py-2 rounded bg-blue-100 border border-blue-400 text-blue-700">
           {mensagem}
-        </div>
+        </p>
       )}
 
-      {erro && (
-        <div className="w-full bg-red-100 border border-red-600 text-red-600 px-4 py-2 rounded text-sm text-center">
-          {erro}
-        </div>
-      )}
-
-      <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
-        <div className="relative flex items-center gap-2 bg-green-400 px-4 py-2 rounded-lg">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-4 w-full"
+      >
+        {/* Nova senha */}
+        <div className="relative flex items-center gap-2 bg-blue-300 px-4 py-2 rounded-lg">
           <MdLock className="text-white" />
           <input
-            ref={senhaRef}
             type="password"
             placeholder="Nova senha"
-            value={novaSenha}
-            onChange={(e) => setNovaSenha(e.target.value)}
-            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
-            required
+            className="bg-transparent border-none text-blue-800 w-full placeholder-blue-800 focus:outline-none"
+            {...register("novaSenha")}
           />
         </div>
+        {errors.novaSenha && (
+          <p className="text-red-500 text-sm">{errors.novaSenha.message}</p>
+        )}
 
-        <div className="relative flex items-center gap-2 bg-green-400 px-4 py-2 rounded-lg">
+        {/* Confirmar senha */}
+        <div className="relative flex items-center gap-2 bg-blue-300 px-4 py-2 rounded-lg">
           <MdLock className="text-white" />
           <input
             type="password"
             placeholder="Confirmar nova senha"
-            value={confirmarSenha}
-            onChange={(e) => setConfirmarSenha(e.target.value)}
-            className="bg-transparent border-none text-green-800 w-full placeholder-green-800 focus:outline-none"
-            required
+            className="bg-transparent border-none text-blue-800 w-full placeholder-blue-800 focus:outline-none"
+            {...register("confirmarSenha")}
           />
         </div>
+        {errors.confirmarSenha && (
+          <p className="text-red-500 text-sm">{errors.confirmarSenha.message}</p>
+        )}
 
         <button
           type="submit"
-          className="w-full py-3 rounded-lg bg-green-600 text-white font-medium transition-all duration-300 hover:bg-green-500 hover:scale-105 shadow-md"
+          disabled={isSubmitting}
+          className="w-full py-3 rounded-lg bg-blue-600 text-white font-medium transition-all duration-300 hover:bg-blue-500 hover:scale-105 shadow-md disabled:opacity-60"
         >
-          Redefinir Senha
+          {isSubmitting ? "Redefinindo..." : "Redefinir Senha"}
         </button>
       </form>
     </div>

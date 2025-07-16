@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Emprestimo } from "@/hooks/useEmprestimosColumns";
 import { DataTableEmprestimos } from "@/components/data-table-emprestimos";
+import { useAuth } from "@/contexts/authContext";
 
 export default function EmprestimosPage() {
+  const { user } = useAuth();
   const [emprestimos, setEmprestimos] = useState<Emprestimo[]>([]);
 
   const fetchEmprestimos = async () => {
@@ -10,9 +12,6 @@ export default function EmprestimosPage() {
       const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/emprestimos`);
       const data = await response.json();
 
-console.log(data);
-
-      // Mapeando os dados para incluir nome do usuário e título do livro
       const emprestimosTratados = data.map((item: any) => ({
         ...item,
         nomeUsuario: item.usuario?.nome || "Desconhecido",
@@ -29,8 +28,20 @@ console.log(data);
   };
 
   useEffect(() => {
-    fetchEmprestimos(); // chama ao montar a página
+    fetchEmprestimos();
   }, []);
+
+  // 🔒 Proteção: apenas admin pode acessar
+  if (user?.cargo !== "admin") {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen text-center p-8">
+        <h1 className="text-3xl font-bold text-red-600">Acesso negado</h1>
+        <p className="mt-2 text-lg text-gray-600 dark:text-gray-300">
+          Você não tem permissão para visualizar esta página. Apenas administradores podem acessar.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-10">

@@ -17,6 +17,7 @@ const navItems = [
   { title: "Página de Início", url: "/Welcome" },
   { title: "Usuários Registrados", url: "/Usuarios" },
   { title: "Coleção de Livros", url: "/Livros" },
+  { title: "Meus livros emprestados", url: "/MeusLivros" },
   { title: "Livros Emprestados", url: "/Emprestimos" },
 ]
 
@@ -47,7 +48,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   className="h-10 w-auto opacity-90"
                 />
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="font-bold text-primary">Carvalho</span>
+                  <span className="font-bold text-primary">Biblioteca do PPGE</span>
                   <span className="text-primary text-muted">Biblioteca Digital</span>
                 </div>
               </Link>
@@ -66,7 +67,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   asChild
                   isActive={isActive}
                   className={`px-4 py-2 rounded-md transition-all duration-300 ${
-                    isActive ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-green-400"
+                    isActive ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-blue-400"
                   }`}
                 >
                   <Link to={item.url}>{item.title}</Link>
@@ -80,14 +81,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter className="flex flex-col gap-3 px-4 py-4 border-t border-border">
         <Button
           variant="ghost"
-          className="justify-start w-full text-primary hover:text-primary-hover hover:bg-green-400 transition-all duration-300"
+          className="justify-start w-full text-primary hover:text-primary-hover hover:bg-blue-400 transition-all duration-300"
           onClick={() => navigate("/configuracoes")}
         >
           Configuração
         </Button>
         <Button
           variant="ghost"
-          className="justify-start w-full text-red-700 hover:text-destructive-hover hover:bg-red-500 transition-all duration-300"
+          className="justify-start w-full text-red-500 hover:text-destructive-hover hover:bg-red-300 transition-all duration-300"
           onClick={handleLogout}
         >
           Logout

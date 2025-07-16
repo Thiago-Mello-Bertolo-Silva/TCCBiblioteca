@@ -3,6 +3,7 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { CiLock } from "react-icons/ci";
 import { MdOutlineEmail, MdOutlinePhone } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
+import { cadastroSchema } from '@/schemas/cadastroSchema';
 
 export default function CadastroForm() {
     const [nome, setNome] = useState('');
@@ -47,7 +48,6 @@ export default function CadastroForm() {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-
         setErrors({
             nome: '',
             email: '',
@@ -55,40 +55,22 @@ export default function CadastroForm() {
             senha: '',
             confirmarSenha: '',
         });
+        setMensagem('');
 
-        setMensagem(''); // Limpa mensagens anteriores
+        // Validação com Zod
+        const result = cadastroSchema.safeParse({ nome, email, telefone, senha, confirmarSenha });
 
-        if (!nome) {
-            setErrors(prev => ({ ...prev, nome: '*Nome deve ser preenchido!' }));
-            inputRefs.nome.current?.focus();
-            return;
-        }
-        if (!email) {
-            setErrors(prev => ({ ...prev, email: '*Email deve ser preenchido!' }));
-            inputRefs.email.current?.focus();
-            return;
-        }
-        if (!telefone) {
-            setErrors(prev => ({ ...prev, telefone: '*Telefone deve ser preenchido!' }));
-            inputRefs.telefone.current?.focus();
-            return;
-        }
+        if (!result.success) {
+            const fieldErrors: any = {};
+            result.error.errors.forEach((err) => {
+                const field = err.path[0] as keyof typeof errors;
+                fieldErrors[field] = err.message;
+            });
+            setErrors((prev) => ({ ...prev, ...fieldErrors }));
 
-        const numerosTelefone = telefone.replace(/\D/g, '');
-        if (numerosTelefone.length !== 11) {
-            setErrors(prev => ({ ...prev, telefone: '*Telefone deve conter 11 dígitos!' }));
-            inputRefs.telefone.current?.focus();
-            return;
-        }
-
-        if (!senha) {
-            setErrors(prev => ({ ...prev, senha: '*Senha deve ser preenchida!' }));
-            inputRefs.senha.current?.focus();
-            return;
-        }
-        if (senha !== confirmarSenha) {
-            setErrors(prev => ({ ...prev, confirmarSenha: '*As senhas não coincidem!' }));
-            inputRefs.confirmarSenha.current?.focus();
+            // Focar no primeiro campo inválido
+            const firstField = result.error.errors[0].path[0] as keyof typeof inputRefs;
+            inputRefs[firstField]?.current?.focus();
             return;
         }
 
@@ -112,10 +94,7 @@ export default function CadastroForm() {
             }
 
             setMensagem('Cadastro realizado com sucesso! Verifique seu e-mail para confirmar sua conta.');
-
-            setTimeout(() => {
-                navigate('/');
-            }, 4000);
+            setTimeout(() => navigate('/'), 4000);
 
         } catch (error) {
             console.error('Erro de conexão:', error);
@@ -124,16 +103,15 @@ export default function CadastroForm() {
     };
 
     return (
-        <div className='flex flex-col items-start gap-[1rem] bg-green-200 text-green-900 w-[24em] p-[1em_2em] rounded-md shadow-md border border-green-600'>
+        <div className='flex flex-col items-start gap-[1rem] bg-blue-50 text-blue-900 w-[24em] p-[1em_2em] rounded-md shadow-md border border-blue-600'>
             <label className='text-[2em] font-bold '>Cadastro</label>
 
             {mensagem && (
                 <div
-                    className={`w-full px-4 py-2 rounded text-sm text-center border ${
-                        mensagem.includes('sucesso')
-                            ? 'bg-green-100 border-green-400 text-green-700'
+                    className={`w-full px-4 py-2 rounded text-sm text-center border ${mensagem.includes('sucesso')
+                            ? 'bg-blue-100 border-blue-400 text-blue-700'
                             : 'bg-red-100 border-red-400 text-red-700'
-                    }`}
+                        }`}
                 >
                     {mensagem}
                 </div>
@@ -142,7 +120,7 @@ export default function CadastroForm() {
             <form className='flex flex-col gap-2 w-full' onSubmit={handleSubmit}>
                 <div className='flex flex-col gap-[1.2em]'>
 
-                    <div className='flex gap-2 items-center bg-green-400 px-3 py-2 rounded'>
+                    <div className='flex gap-2 items-center bg-blue-300 px-3 py-2 rounded'>
                         <FaRegCircleUser />
                         <input
                             ref={inputRefs.nome}
@@ -150,12 +128,12 @@ export default function CadastroForm() {
                             placeholder='Nome completo'
                             value={nome}
                             onChange={(e) => setNome(e.target.value)}
-                            className='bg-transparent border-none text-green-900 w-full placeholder-green-900 focus:outline-none'
+                            className='bg-transparent border-none text-blue-900 w-full placeholder-blue-900 focus:outline-none'
                         />
                     </div>
                     {errors.nome && <p className='text-red-600 text-xs'>{errors.nome}</p>}
 
-                    <div className='flex gap-2 items-center bg-green-400 px-3 py-2 rounded'>
+                    <div className='flex gap-2 items-center bg-blue-300 px-3 py-2 rounded'>
                         <MdOutlineEmail />
                         <input
                             ref={inputRefs.email}
@@ -163,12 +141,12 @@ export default function CadastroForm() {
                             placeholder='E-mail'
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className='bg-transparent border-none text-green-900 w-full placeholder-green-900 focus:outline-none'
+                            className='bg-transparent border-none text-blue-900 w-full placeholder-blue-900 focus:outline-none'
                         />
                     </div>
                     {errors.email && <p className='text-red-600 text-xs'>{errors.email}</p>}
 
-                    <div className='flex gap-2 items-center bg-green-400 px-3 py-2 rounded'>
+                    <div className='flex gap-2 items-center bg-blue-300 px-3 py-2 rounded'>
                         <MdOutlinePhone />
                         <input
                             ref={inputRefs.telefone}
@@ -176,13 +154,13 @@ export default function CadastroForm() {
                             placeholder='Telefone'
                             value={telefone}
                             onChange={handleTelefoneChange}
-                            className='bg-transparent border-none text-green-900 w-full placeholder-green-900 focus:outline-none'
+                            className='bg-transparent border-none text-blue-900 w-full placeholder-blue-900 focus:outline-none'
                             maxLength={15}
                         />
                     </div>
                     {errors.telefone && <p className='text-red-600 text-xs'>{errors.telefone}</p>}
 
-                    <div className='flex gap-2 items-center bg-green-400 px-3 py-2 rounded'>
+                    <div className='flex gap-2 items-center bg-blue-300 px-3 py-2 rounded'>
                         <CiLock />
                         <input
                             ref={inputRefs.senha}
@@ -190,12 +168,12 @@ export default function CadastroForm() {
                             placeholder='Senha'
                             value={senha}
                             onChange={(e) => setSenha(e.target.value)}
-                            className='bg-transparent border-none text-green-900 w-full placeholder-green-900 focus:outline-none'
+                            className='bg-transparent border-none text-blue-900 w-full placeholder-blue-900 focus:outline-none'
                         />
                     </div>
                     {errors.senha && <p className='text-red-600 text-xs'>{errors.senha}</p>}
 
-                    <div className='flex gap-2 items-center bg-green-400 px-3 py-2 rounded'>
+                    <div className='flex gap-2 items-center bg-blue-300 px-3 py-2 rounded'>
                         <CiLock />
                         <input
                             ref={inputRefs.confirmarSenha}
@@ -203,13 +181,13 @@ export default function CadastroForm() {
                             placeholder='Confirmar senha'
                             value={confirmarSenha}
                             onChange={(e) => setConfirmarSenha(e.target.value)}
-                            className='bg-transparent border-none text-green-900 w-full placeholder-green-900 focus:outline-none'
+                            className='bg-transparent border-none text-blue-900 w-full placeholder-blue-900 focus:outline-none'
                         />
                     </div>
                     {errors.confirmarSenha && <p className='text-red-600 text-xs'>{errors.confirmarSenha}</p>}
 
                     <button
-                        className='w-full h-[3em] rounded-md text-white bg-yellow-700 cursor-pointer transition-all duration-300 ease-in-out hover:bg-yellow-900 hover:shadow-lg hover:scale-105'
+                        className='w-full h-[3em] rounded-md text-white bg-red-600 cursor-pointer transition-all duration-300 ease-in-out hover:bg-red-500 hover:shadow-lg hover:scale-105'
                         type='submit'
                     >
                         Cadastrar
@@ -217,7 +195,7 @@ export default function CadastroForm() {
                 </div>
             </form>
 
-            <div className="text-sm text-green-900 mt-2 w-full text-center">
+            <div className="text-sm text-blue-900 mt-2 w-full text-center">
                 Já tem uma conta?{' '}
                 <a href="/" className="text-blue-700 hover:underline">
                     Faça login

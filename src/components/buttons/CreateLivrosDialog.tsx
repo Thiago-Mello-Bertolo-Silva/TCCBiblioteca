@@ -1,5 +1,7 @@
-// src/components/buttons/CreateLivrosDialog.tsx
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Dialog,
   DialogDescription,
@@ -19,34 +21,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { useAuth } from "@/contexts/authContext";
+import { livroSchema, LivroFormData } from "@/schemas/createLivroSchema";
 
 interface CreateLivrosDialogProps {
   onLivroCreate: () => void;
 }
 
 export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
-  const { user } = useAuth(); // Pega o usuário logado
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
-  const [titulo, setTitulo] = useState("");
-  const [autores, setAutores] = useState("");
-  const [editora, setEditora] = useState("");
-  const [anoPublicacao, setAnoPublicacao] = useState("");
-  const [edicao, setEdicao] = useState("");
-  const [linkOnline, setLinkOnline] = useState("");
-  const [disponivel, setDisponivel] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const isFormValid =
-    titulo.trim() !== "" &&
-    autores.trim() !== "" &&
-    editora.trim() !== "" &&
-    edicao.trim() !== "" &&
-    anoPublicacao.trim() !== "" &&
-    linkOnline.trim() !== "";
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+  } = useForm<LivroFormData>({
+    resolver: zodResolver(livroSchema),
+    defaultValues: {
+      titulo: "",
+      autores: "",
+      editora: "",
+      anoPublicacao: "",
+      edicao: "",
+      linkOnline: "",
+      disponivel: "true",
+    },
+  });
 
-  const handleSubmit = async () => {
+  const disponivel = watch("disponivel");
+
+  const onSubmit = async (data: LivroFormData) => {
     setErro("");
     setLoading(true);
 
@@ -55,13 +66,9 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          titulo,
-          autores,
-          editora,
-          anoPublicacao: Number(anoPublicacao),
-          edicao,
-          linkOnline,
-          disponivel: disponivel ? "Sim" : "Não",
+          ...data,
+          anoPublicacao: Number(data.anoPublicacao),
+          disponivel: data.disponivel === "true" ? "Sim" : "Não",
         }),
       });
 
@@ -69,13 +76,7 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
         throw new Error("Erro ao criar livro");
       }
 
-      setTitulo("");
-      setAutores("");
-      setEditora("");
-      setAnoPublicacao("");
-      setEdicao("");
-      setLinkOnline("");
-      setDisponivel(true);
+      reset();
       setOpen(false);
       onLivroCreate();
     } catch (err: any) {
@@ -85,7 +86,6 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
     }
   };
 
-  // ⚠️ Apenas admins podem ver o botão e o dialog
   if (user?.cargo !== "admin") return null;
 
   return (
@@ -100,63 +100,60 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
             Preencha as informações para cadastrar um novo livro.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+
+        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label>Título</Label>
-            <Input
-              value={titulo}
-              onChange={(e) => setTitulo(e.target.value)}
-              placeholder="Digite o título"
-            />
+            <Input placeholder="Digite o título" {...register("titulo")} />
+            {errors.titulo && <p className="text-red-500 text-sm">{errors.titulo.message}</p>}
           </div>
+
           <div className="grid gap-2">
             <Label>Autores</Label>
-            <Input
-              value={autores}
-              onChange={(e) => setAutores(e.target.value)}
-              placeholder="Digite os autores"
-            />
+            <Input placeholder="Digite os autores" {...register("autores")} />
+            {errors.autores && <p className="text-red-500 text-sm">{errors.autores.message}</p>}
           </div>
+
           <div className="grid gap-2">
             <Label>Editora</Label>
-            <Input
-              value={editora}
-              onChange={(e) => setEditora(e.target.value)}
-              placeholder="Digite a editora"
-            />
+            <Input placeholder="Digite a editora" {...register("editora")} />
+            {errors.editora && <p className="text-red-500 text-sm">{errors.editora.message}</p>}
           </div>
+
           <div className="grid gap-2">
             <Label>Ano de Publicação</Label>
             <Input
-              value={anoPublicacao}
-              onChange={(e) =>
-                setAnoPublicacao(e.target.value.replace(/\D/g, ""))
-              }
               placeholder="Ex: 2024"
               maxLength={4}
+              {...register("anoPublicacao")}
+              onInput={(e) =>
+                setValue("anoPublicacao", e.currentTarget.value.replace(/\D/g, ""))
+              }
             />
+            {errors.anoPublicacao && (
+              <p className="text-red-500 text-sm">{errors.anoPublicacao.message}</p>
+            )}
           </div>
+
           <div className="grid gap-2">
             <Label>Edição</Label>
-            <Input
-              value={edicao}
-              onChange={(e) => setEdicao(e.target.value)}
-              placeholder="Digite a edição"
-            />
+            <Input placeholder="Digite a edição" {...register("edicao")} />
+            {errors.edicao && <p className="text-red-500 text-sm">{errors.edicao.message}</p>}
           </div>
+
           <div className="grid gap-2">
             <Label>Link Online</Label>
-            <Input
-              value={linkOnline}
-              onChange={(e) => setLinkOnline(e.target.value)}
-              placeholder="Digite o link"
-            />
+            <Input placeholder="Digite o link" {...register("linkOnline")} />
+            {errors.linkOnline && (
+              <p className="text-red-500 text-sm">{errors.linkOnline.message}</p>
+            )}
           </div>
+
           <div className="grid gap-2">
             <Label>Disponível</Label>
             <Select
-              value={disponivel ? "true" : "false"}
-              onValueChange={(value) => setDisponivel(value === "true")}
+              value={disponivel}
+              onValueChange={(value: "true" | "false") => setValue("disponivel", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Selecione a disponibilidade" />
@@ -166,14 +163,19 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
                 <SelectItem value="false">Não</SelectItem>
               </SelectContent>
             </Select>
+            {errors.disponivel && (
+              <p className="text-red-500 text-sm">{errors.disponivel.message}</p>
+            )}
           </div>
+
           {erro && <p className="text-red-500 text-sm">{erro}</p>}
-        </div>
-        <DialogFooter>
-          <Button onClick={handleSubmit} disabled={loading || !isFormValid}>
-            {loading ? "Salvando..." : "Salvar"}
-          </Button>
-        </DialogFooter>
+
+          <DialogFooter>
+            <Button type="submit" disabled={loading}>
+              {loading ? "Salvando..." : "Salvar"}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

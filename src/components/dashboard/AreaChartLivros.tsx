@@ -34,9 +34,9 @@ export function AreaChartLivros() {
   }, []);
 
   return (
-    <Card className="w-full h-[350px] bg-transparent border border-green-600 shadow-lg rounded-lg p-4">
+    <Card className="w-full h-[350px] bg-transparent border border-blue-400 shadow-lg rounded-lg p-4">
       <CardContent className="h-full p-6">
-        <h2 className="text-2xl font-bold text-green-800 mb-4 text-center">
+        <h2 className="text-2xl font-bold text-blue-600 mb-4 text-center">
           Livros Cadastrados por Mês
         </h2>
         <ResponsiveContainer width="100%" height="100%">

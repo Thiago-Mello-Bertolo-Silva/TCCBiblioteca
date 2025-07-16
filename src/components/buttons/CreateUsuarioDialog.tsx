@@ -1,107 +1,150 @@
-// src/components/buttons/CreateUsuarioDialog.tsx
 import { useState } from "react";
-import { Dialog, DialogDescription, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import {
+  Dialog,
+  DialogDescription,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAuth } from "@/contexts/authContext"; 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { useAuth } from "@/contexts/authContext";
+import { usuarioSchema, UsuarioFormData } from "@/schemas/createUsuarioSchema";
 
 interface CreateUsuarioDialogProps {
   onUsuarioCriado: () => void;
 }
 
 export function CreateUsuarioDialog({ onUsuarioCriado }: CreateUsuarioDialogProps) {
-  const { user, isLoading } = useAuth(); // Acessa o usuário autenticado
-  const [open, setOpen] = useState(false);
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [senha, setSenha] = useState("");
-  const [cargo, setCargo] = useState("usuario");
-  const [loading, setLoading] = useState(false);
+  const { user, isLoading } = useAuth();
   const [erro, setErro] = useState("");
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const isFormValid = nome.trim() !== "" && email.trim() !== "" && telefone.trim() !== "" && senha.trim() !== "" && cargo.trim() !== "";
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<UsuarioFormData>({
+    resolver: zodResolver(usuarioSchema),
+    defaultValues: {
+      nome: "",
+      email: "",
+      telefone: "",
+      senha: "",
+      cargo: "usuario",
+    },
+  });
 
-  const handleTelefoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, "");
-
-    if (value.length > 11) {
-      value = value.slice(0, 11);
-    }
-
-    if (value.length >= 2 && value.length <= 6) {
-      value = `(${value.slice(0, 2)})${value.slice(2)}`;
-    } else if (value.length > 6) {
-      value = `(${value.slice(0, 2)})${value.slice(2, 7)}-${value.slice(7)}`;
-    }
-
-    setTelefone(value);
-  };
-
-  const handleSubmit = async () => {
+  /** form submit */
+  const onSubmit = async (data: UsuarioFormData) => {
     setErro("");
     setLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/usuario`, {
+      const res = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/usuario`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, email, telefone, senha, cargo }),
+        body: JSON.stringify(data),
       });
+      if (!res.ok) throw new Error("Erro ao criar usuário");
 
-      if (!response.ok) {
-        throw new Error("Erro ao criar usuário");
-      }
-
-      setNome("");
-      setEmail("");
-      setTelefone("");
-      setSenha("");
-      setCargo("usuario");
+      reset();
       setOpen(false);
       onUsuarioCriado();
-    } catch (err: any) {
-      setErro(err.message || "Erro desconhecido");
+    } catch (e: any) {
+      setErro(e.message ?? "Erro desconhecido");
     } finally {
       setLoading(false);
     }
   };
 
-  // Evita mostrar o botão/modal caso não seja admin
-  if (isLoading || !user || user.cargo !== "admin") return null;
+  /** máscara do telefone */
+  const telefoneRaw = watch("telefone");
+  function formatTelefone(v: string) {
+    const n = v.replace(/\D/g, "").slice(0, 11);
+    if (n.length <= 2) return `(${n}`;
+    if (n.length <= 7) return `(${n.slice(0, 2)})${n.slice(2)}`;
+    return `(${n.slice(0, 2)})${n.slice(2, 7)}-${n.slice(7)}`;
+  }
+
+  // bloqueia todo o modal se não for admin
+  if (isLoading || user?.cargo !== "admin") return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>Cadastrar Novo Usuário</Button>
       </DialogTrigger>
+
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Novo Usuário</DialogTitle>
-          <DialogDescription>Preencha as informações para cadastrar um novo usuário.</DialogDescription>
+          <DialogDescription>
+            Preencha as informações para cadastrar um novo usuário.
+          </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+
+        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
+          {/* nome */}
           <div className="grid gap-2">
             <Label>Nome</Label>
-            <Input value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Digite o nome" />
+            <Input placeholder="Digite o nome" {...register("nome")} />
+            {errors.nome && <p className="text-red-500 text-sm">{errors.nome.message}</p>}
           </div>
+
+          {/* email */}
           <div className="grid gap-2">
             <Label>Email</Label>
-            <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Digite o email" type="email" />
+            <Input type="email" placeholder="E‑mail" {...register("email")} />
+            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
           </div>
+
+          {/* telefone */}
           <div className="grid gap-2">
             <Label>Telefone</Label>
-            <Input value={telefone} onChange={handleTelefoneChange} placeholder="(00)00000-0000" />
+            <Input
+              placeholder="(00)00000-0000"
+              value={telefoneRaw}
+              {...register("telefone")}
+              onChange={(e) => setValue("telefone", formatTelefone(e.target.value))}
+            />
+            {errors.telefone && (
+              <p className="text-red-500 text-sm">{errors.telefone.message}</p>
+            )}
           </div>
+
+          {/* senha */}
           <div className="grid gap-2">
             <Label>Senha</Label>
-            <Input value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Digite a senha" type="password" />
+            <Input type="password" placeholder="Senha" {...register("senha")} />
+            {errors.senha && <p className="text-red-500 text-sm">{errors.senha.message}</p>}
           </div>
+
+          {/* cargo */}
           <div className="grid gap-2">
             <Label>Cargo</Label>
-            <Select value={cargo} onValueChange={setCargo}>
+            <Select
+              value={watch("cargo")}
+              onValueChange={(v) => setValue("cargo", v as UsuarioFormData["cargo"])}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Selecione o cargo" />
               </SelectTrigger>
@@ -110,14 +153,17 @@ export function CreateUsuarioDialog({ onUsuarioCriado }: CreateUsuarioDialogProp
                 <SelectItem value="admin">Administrador</SelectItem>
               </SelectContent>
             </Select>
+            {errors.cargo && <p className="text-red-500 text-sm">{errors.cargo.message}</p>}
           </div>
+
           {erro && <p className="text-red-500 text-sm">{erro}</p>}
-        </div>
-        <DialogFooter>
-          <Button onClick={handleSubmit} disabled={loading || !isFormValid}>
-            {loading ? "Salvando..." : "Salvar"}
-          </Button>
-        </DialogFooter>
+
+          <DialogFooter>
+            <Button type="submit" disabled={loading}>
+              {loading ? "Salvando..." : "Salvar"}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
