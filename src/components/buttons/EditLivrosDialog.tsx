@@ -1,23 +1,9 @@
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent,  DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger,} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import { Livro } from "@/hooks/useLivrosColumns";
 import { useAuth } from "@/contexts/authContext"; 
 
@@ -30,7 +16,7 @@ export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDia
   const { user } = useAuth(); 
   const [open, setOpen] = useState(false);
   const [titulo, setTitulo] = useState("");
-  const [autor, setAutor] = useState("");
+  const [autores, setAutores] = useState("");
   const [anoPublicacao, setAnoPublicacao] = useState("");
   const [editora, setEditora] = useState("");
   const [linkOnline, setLinkOnline] = useState("");
@@ -40,7 +26,7 @@ export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDia
     setOpen(isOpen);
     if (isOpen && selectedLivro) {
       setTitulo(selectedLivro.titulo);
-      setAutor(selectedLivro.autores);
+      setAutores(selectedLivro.autores);
       setAnoPublicacao(selectedLivro.anoPublicacao.toString());
       setEditora(selectedLivro.editora || "");
       setLinkOnline(selectedLivro.linkOnline || "");
@@ -57,7 +43,7 @@ export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDia
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           titulo,
-          autor,
+          autores,
           anoPublicacao: parseInt(anoPublicacao, 10),
           editora,
           linkOnline,
@@ -102,11 +88,11 @@ export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDia
             />
           </div>
           <div className="grid gap-2">
-            <Label>Autor</Label>
+            <Label>Autores</Label>
             <Input
-              placeholder="Autor"
-              value={autor}
-              onChange={(e) => setAutor(e.target.value)}
+              placeholder="Autores"
+              value={autores}
+              onChange={(e) => setAutores(e.target.value)}
             />
           </div>
           <div className="grid gap-2">
@@ -156,7 +142,7 @@ export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDia
         <DialogFooter>
           <Button
             onClick={handleSubmit}
-            disabled={!titulo || !autor || !anoPublicacao}
+            disabled={!titulo || !autores || !anoPublicacao}
           >
             Salvar Alterações
           </Button>

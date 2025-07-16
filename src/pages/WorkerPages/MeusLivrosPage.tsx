@@ -54,8 +54,8 @@ export default function MeusLivrosPage() {
         {emprestimos.map((e) => (
           <li key={e.id} className="bg-white shadow rounded-lg p-4 border">
             <h2 className="text-xl font-semibold text-blue-800">{e.livro.titulo}</h2>
-            <p>📅 Emprestado em: {new Date(e.dataInicio).toLocaleDateString()}</p>
-            <p>📚 Devolver até: {new Date(e.dataPrevistoDevolucao).toLocaleDateString()}</p>
+            <p className="text-black">📅 Emprestado em: {new Date(e.dataInicio).toLocaleDateString()}</p>
+            <p className="text-black">📚 Devolver até: {new Date(e.dataPrevistoDevolucao).toLocaleDateString()}</p>
           </li>
         ))}
       </ul>
