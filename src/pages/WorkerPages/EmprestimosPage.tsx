@@ -44,7 +44,7 @@ export default function EmprestimosPage() {
   }
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container overflow-auto mx-auto py-10">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Empréstimos</h1>
       </div>
