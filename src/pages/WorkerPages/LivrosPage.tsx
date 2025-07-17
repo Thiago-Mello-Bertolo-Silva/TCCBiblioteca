@@ -21,7 +21,7 @@ export default function LivrosPage() {
   }, []);
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container overflow-auto mx-auto py-10">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Coleção de livros</h1>
       </div>
