@@ -20,6 +20,7 @@ import LivrosPage from './pages/WorkerPages/LivrosPage.tsx';
 import EmprestimosPage from './pages/WorkerPages/EmprestimosPage.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { NotificacoesPage } from './pages/WorkerPages/NotificacoesPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ createRoot(document.getElementById('root')!).render(
                 <Route path="/MeusLivros" element={<MeusLivros />} />
                 <Route path="/Emprestimos" element={<EmprestimosPage />} />
                 <Route path="/configuracoes" element={<ConfiguracaoPage />} />
+                <Route path="/Notificacoes" element={<NotificacoesPage />} />
               </Route>
             </Routes>
           </ThemeProvider>

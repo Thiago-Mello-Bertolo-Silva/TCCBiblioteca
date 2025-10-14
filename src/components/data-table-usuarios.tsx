@@ -57,16 +57,29 @@ export function DataTableUsuarios({ data, onRefreshUsuarios }: DataTableUsuarios
   return (
     <div className="w-full max-w-7xl mx-auto px-6 py-8">
       {/* Barra superior aprimorada */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-6">
-        <Input
-          placeholder="Pesquisar e-mail..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
-        />
-        <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-6">
+        {/* Filtros empilhados */}
+        <div className="flex flex-col gap-3 w-full sm:w-auto">
+          <Input
+            placeholder="Pesquisar nome..."
+            value={(table.getColumn("nome")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("nome")?.setFilterValue(event.target.value)
+            }
+            className="w-full sm:w-64 bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
+          />
+          <Input
+            placeholder="Pesquisar e-mail..."
+            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("email")?.setFilterValue(event.target.value)
+            }
+            className="w-full sm:w-64 bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
+          />
+        </div>
+
+        {/* Botões */}
+        <div className="flex gap-4 flex-wrap">
           <CreateUsuarioDialog onUsuarioCriado={handleUserUpdated} />
           <EditUsuarioDialog selectedUser={selectedUser} onUserUpdated={handleUserUpdated} />
           <DeleteUsuarioDialog selectedUser={selectedUser} onUserDeleted={handleUserDeleted} />

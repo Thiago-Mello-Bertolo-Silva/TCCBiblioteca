@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Dialog, DialogDescription, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter,} from "@/components/ui/dialog";
+import { Dialog, DialogDescription, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter, } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
 import { useAuth } from "@/contexts/authContext";
 
 interface CreateLivrosDialogProps {
@@ -14,6 +14,7 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
   const { user } = useAuth(); // Pega o usuário logado
   const [open, setOpen] = useState(false);
   const [titulo, setTitulo] = useState("");
+  const [categorias, setCategorias] = useState("");
   const [autores, setAutores] = useState("");
   const [editora, setEditora] = useState("");
   const [anoPublicacao, setAnoPublicacao] = useState("");
@@ -25,6 +26,7 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
 
   const isFormValid =
     titulo.trim() !== "" &&
+    categorias.trim() !== "" &&
     autores.trim() !== "" &&
     editora.trim() !== "" &&
     edicao.trim() !== "" &&
@@ -41,6 +43,7 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           titulo,
+          categorias,
           autores,
           editora,
           anoPublicacao: Number(anoPublicacao),
@@ -55,6 +58,7 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
       }
 
       setTitulo("");
+      setCategorias("");
       setAutores("");
       setEditora("");
       setAnoPublicacao("");
@@ -92,6 +96,14 @@ export function CreateLivrosDialog({ onLivroCreate }: CreateLivrosDialogProps) {
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
               placeholder="Digite o título"
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>Categorias</Label>
+            <Input
+              value={categorias}
+              onChange={(e) => setCategorias(e.target.value)}
+              placeholder="Digite a categorias"
             />
           </div>
           <div className="grid gap-2">

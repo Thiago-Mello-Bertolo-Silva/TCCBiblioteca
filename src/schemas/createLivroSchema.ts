@@ -3,6 +3,7 @@ import { z } from "zod";
 
 export const livroSchema = z.object({
   titulo: z.string().min(1, "Título é obrigatório"),
+  categorias: z.string().min(1, "Categorias é obrigatório"),
   autores: z.string().min(1, "Autores é obrigatório"),
   editora: z.string().min(1, "Editora é obrigatória"),
   anoPublicacao: z

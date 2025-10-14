@@ -1,10 +1,10 @@
 import { Suspense, lazy } from "react";
-import { QueryErrorResetBoundary,} from "@tanstack/react-query";
+import { QueryErrorResetBoundary, } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle,} from "@/components/ui/card";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/authContext";
-import { useTotalLivrosQuery, useTotalUsuariosQuery,} from "@/hooks/useDashboardMetricsQuery";
+import { useTotalEmprestimosAtivosQuery, useTotalLivrosQuery, useTotalUsuariosQuery, } from "@/hooks/useDashboardMetricsQuery";
 
 const AreaChartLivros = lazy(() =>
   import("@/components/dashboard/AreaChartLivros").then((module) => ({
@@ -71,6 +71,24 @@ function TotalUsuariosCard() {
   );
 }
 
+// Componente do card de Total de Emprestimos
+function TotalEmprestimosCard() {
+  const { data } = useTotalEmprestimosAtivosQuery();
+  return (
+    <Card className="border border-blue-600 shadow-lg rounded-lg p-6">
+      <CardHeader>
+        <CardDescription className="text-blue-400 text-lg">
+          Livros Emprestados no Momento
+        </CardDescription>
+        <CardTitle className="text-4xl font-bold text-blue-400">{data}</CardTitle>
+      </CardHeader>
+      <CardFooter className="text-sm text-blue-400">
+        Empréstimos ainda não concluídos
+      </CardFooter>
+    </Card>
+  );
+}
+
 // Página principal
 export function HomePage() {
   const { user } = useAuth();
@@ -117,6 +135,22 @@ export function HomePage() {
             >
               <Suspense fallback={<div className="text-blue-800 animate-pulse">Carregando usuários...</div>}>
                 <TotalUsuariosCard />
+              </Suspense>
+            </ErrorBoundary>
+          )}
+        </QueryErrorResetBoundary>
+
+        {/* Card: Total de Empréstimos Ativos */}
+        <QueryErrorResetBoundary>
+          {({ reset }) => (
+            <ErrorBoundary
+              onReset={reset}
+              fallbackRender={({ resetErrorBoundary }) => (
+                <ErrorCard title="Erro ao carregar empréstimos" reset={resetErrorBoundary} />
+              )}
+            >
+              <Suspense fallback={<div className="text-blue-800 animate-pulse">Carregando empréstimos...</div>}>
+                <TotalEmprestimosCard />
               </Suspense>
             </ErrorBoundary>
           )}
