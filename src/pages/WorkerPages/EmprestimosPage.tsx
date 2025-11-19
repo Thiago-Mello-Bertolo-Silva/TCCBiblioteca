@@ -34,7 +34,7 @@ export default function EmprestimosPage() {
   // 🔒 Proteção: apenas admin pode acessar
   if (user?.cargo !== "admin") {
     return (
-      <div className="flex flex-col items-center justify-center h-screen text-center p-8">
+      <div className="flex flex-col items-center justify-center min-h-screen text-center p-8">
         <h1 className="text-3xl font-bold text-red-600">Acesso negado</h1>
         <p className="mt-2 text-lg text-gray-600 dark:text-gray-300">
           Você não tem permissão para visualizar esta página. Apenas administradores podem acessar.

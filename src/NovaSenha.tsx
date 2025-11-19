@@ -4,7 +4,7 @@ import NovaSenhaForm from './components/NovaSenhaForm';
 export default function NovaSenha() {
   return (
     <div
-      className="h-screen w-screen flex items-center justify-center bg-cover bg-center"
+      className="min-h-screen w-screen flex items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage:
           'url(https://img.freepik.com/free-photo/stack-books-with-library-scene_91128-4301.jpg?semt=ais_hybrid)'

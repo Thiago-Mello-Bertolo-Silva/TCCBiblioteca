@@ -16,7 +16,7 @@ export default function App() {
           path="/"
           element={
             <div
-              className="h-screen w-screen flex items-center justify-center bg-cover bg-center"
+              className="min-h-screen w-screen flex items-center justify-center bg-cover bg-center"
               style={{
                 backgroundImage:
                   'url(https://images.squarespace-cdn.com/content/v1/5bb659ce77b9038cbe26abca/1550769249425-TEN6HIBV3ALNCN1TH3EE/140505_BIBLIOTECAestadual-024.jpg)'

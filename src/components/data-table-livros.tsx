@@ -57,46 +57,100 @@ export function DataTableLivros({ data, onRefreshLivros }: DataTableLivrosProps)
   return (
     <div className="w-full max-w-7xl mx-auto px-6 py-8">
       {/* Barra superior */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-6">
-        <Input
-          placeholder="Pesquisar título..."
-          value={(table.getColumn("titulo")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("titulo")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
-        />
-        <div className="flex gap-4">
-          <CreateLivrosDialog onLivroCreate={handleLivroUpdated} />
-          <EditLivrosDialog
-            selectedLivro={selectedLivro}
-            onLivroUpdated={handleLivroUpdated}
-          />
-          <DeleteLivrosDialog
-            selectedLivro={selectedLivro}
-            onLivroDeleted={handleLivroDeleted}
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="border-blue-600 text-blue-800 hover:bg-blue-300 rounded-lg shadow-md">
-                Colunas <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table.getAllColumns().filter((column) => column.getCanHide()).map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
+      <div className="flex flex-col gap-4 sm:gap-6 mb-6">
+  {/* Filtros em grid */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <Input
+      placeholder="Pesquisar título..."
+      value={(table.getColumn("titulo")?.getFilterValue() as string) ?? ""}
+      onChange={(event) =>
+        table.getColumn("titulo")?.setFilterValue(event.target.value)
+      }
+      className="bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
+    />
+
+    <Input
+      placeholder="Pesquisar categorias..."
+      value={(table.getColumn("categorias")?.getFilterValue() as string) ?? ""}
+      onChange={(event) =>
+        table.getColumn("categorias")?.setFilterValue(event.target.value)
+      }
+      className="bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
+    />
+
+    <Input
+      placeholder="Pesquisar autor..."
+      value={(table.getColumn("autores")?.getFilterValue() as string) ?? ""}
+      onChange={(event) =>
+        table.getColumn("autores")?.setFilterValue(event.target.value)
+      }
+      className="bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
+    />
+
+    <Input
+      placeholder="Pesquisar editora..."
+      value={(table.getColumn("editora")?.getFilterValue() as string) ?? ""}
+      onChange={(event) =>
+        table.getColumn("editora")?.setFilterValue(event.target.value)
+      }
+      className="bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
+    />
+
+    <Input
+      placeholder="Pesquisar ano..."
+      type="number"
+      value={(table.getColumn("anoPublicacao")?.getFilterValue() as number | undefined) ?? ""}
+      onChange={(event) => {
+        const inputValue = event.target.value;
+        const parsed = parseInt(inputValue);
+        table
+          .getColumn("anoPublicacao")
+          ?.setFilterValue(isNaN(parsed) ? undefined : parsed);
+      }}
+      className="bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
+    />
+
+    <Input
+      placeholder="Pesquisar edição..."
+      value={(table.getColumn("edicao")?.getFilterValue() as string) ?? ""}
+      onChange={(event) =>
+        table.getColumn("edicao")?.setFilterValue(event.target.value)
+      }
+      className="bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
+    />
+  </div>
+
+  {/* Botões de ações */}
+  <div className="flex flex-wrap gap-4 justify-between items-center">
+    <div className="flex gap-4">
+      <CreateLivrosDialog onLivroCreate={handleLivroUpdated} />
+      <EditLivrosDialog selectedLivro={selectedLivro} onLivroUpdated={handleLivroUpdated} />
+      <DeleteLivrosDialog selectedLivro={selectedLivro} onLivroDeleted={handleLivroDeleted} />
+    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className="border-blue-600 text-blue-800 hover:bg-blue-300 rounded-lg shadow-md"
+        >
+          Colunas <ChevronDown />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {table.getAllColumns().filter((column) => column.getCanHide()).map((column) => (
+          <DropdownMenuCheckboxItem
+            key={column.id}
+            className="capitalize"
+            checked={column.getIsVisible()}
+            onCheckedChange={(value) => column.toggleVisibility(!!value)}
+          >
+            {column.id}
+          </DropdownMenuCheckboxItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </div>
+</div>
 
       {/* Tabela aprimorada */}
       <div className="w-full overflow-hidden rounded-2xl border border-blue-600 shadow-lg backdrop-blur-md bg-white/30">

@@ -4,7 +4,7 @@ import RecuperacaoForm from './components/recuperacaoForm';
 export default function Recuperacao() {
   return (
     <div
-      className="h-screen w-screen flex items-center justify-center bg-cover bg-center"
+      className="min-h-screen w-screen flex items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage:
           'url(https://s2.glbimg.com/oa2VSk88ihiNf1fTa21RJbM9tWE=/smart/e.glbimg.com/og/ed/f/original/2020/07/07/biblioteca-ludica-em-escola-em-curitiba-1.jpg)'

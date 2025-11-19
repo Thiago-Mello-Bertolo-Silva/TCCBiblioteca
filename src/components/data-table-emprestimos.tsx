@@ -1,11 +1,12 @@
-import { ColumnFiltersState, SortingState, VisibilityState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
+// src/components/data-table/data-table-emprestimos.tsx
+import { ColumnFiltersState, SortingState, VisibilityState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable,} from "@tanstack/react-table";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import { useState } from "react";
-import { useEmprestimosColumns, Emprestimo } from "@/hooks/useEmprestimosColumns";
+import { useEmprestimosColumns, Emprestimo,} from "@/hooks/useEmprestimosColumns";
 import { CreateEmprestimosDialog } from "@/components/buttons/CreateEmprestimosDialog";
 import { EditEmprestimosDialog } from "@/components/buttons/EditEmprestimosDialog";
 import { DeleteEmprestimosDialog } from "@/components/buttons/DeleteEmprestimosDialog";
@@ -15,7 +16,10 @@ interface DataTableEmprestimosProps {
   onRefreshEmprestimos: () => void;
 }
 
-export function DataTableEmprestimos({ data, onRefreshEmprestimos }: DataTableEmprestimosProps) {
+export function DataTableEmprestimos({
+  data,
+  onRefreshEmprestimos,
+}: DataTableEmprestimosProps) {
   const columns = useEmprestimosColumns();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -42,7 +46,8 @@ export function DataTableEmprestimos({ data, onRefreshEmprestimos }: DataTableEm
   });
 
   const selectedRows = table.getSelectedRowModel().rows;
-  const selectedEmprestimo = selectedRows.length === 1 ? selectedRows[0].original : null;
+  const selectedEmprestimo =
+    selectedRows.length === 1 ? selectedRows[0].original : null;
 
   const handleEmprestimoUpdated = () => {
     table.resetRowSelection();
@@ -57,17 +62,34 @@ export function DataTableEmprestimos({ data, onRefreshEmprestimos }: DataTableEm
   return (
     <div className="w-full max-w-7xl mx-auto px-6 py-8">
       {/* Barra superior refinada */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-6">
-        <Input
-          placeholder="Pesquisar..."
-          value={(table.getColumn("nomeLivro")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("nomeLivro")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
-        />
-        <div className="flex gap-4">
-          <CreateEmprestimosDialog onEmprestimoCriado={handleEmprestimoUpdated} />
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-6">
+        {/* Filtros empilhados */}
+        <div className="flex flex-col gap-3 w-full sm:w-auto">
+          <Input
+            placeholder="Pesquisar nome do usuário..."
+            value={(table.getColumn("nome")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("nome")?.setFilterValue(event.target.value)
+            }
+            className="w-full sm:w-64 bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
+          />
+          <Input
+            placeholder="Pesquisar nome do livro..."
+            value={
+              (table.getColumn("nomeLivro")?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table.getColumn("nomeLivro")?.setFilterValue(event.target.value)
+            }
+            className="w-full sm:w-64 bg-transparent border border-blue-600 text-blue-800 focus:ring-blue-500 rounded-lg px-4 py-2 shadow-md"
+          />
+        </div>
+
+        {/* Botões de ação */}
+        <div className="flex gap-4 flex-wrap">
+          <CreateEmprestimosDialog
+            onEmprestimoCriado={handleEmprestimoUpdated}
+          />
           <EditEmprestimosDialog
             selectedEmprestimo={selectedEmprestimo}
             onEmprestimoUpdated={handleEmprestimoUpdated}
@@ -78,21 +100,29 @@ export function DataTableEmprestimos({ data, onRefreshEmprestimos }: DataTableEm
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="border-blue-600 text-blue-800 hover:bg-blue-300 rounded-lg shadow-md">
+              <Button
+                variant="outline"
+                className="border-blue-600 text-blue-800 hover:bg-blue-300 rounded-lg shadow-md"
+              >
                 Colunas <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {table.getAllColumns().filter((column) => column.getCanHide()).map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              ))}
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -105,10 +135,16 @@ export function DataTableEmprestimos({ data, onRefreshEmprestimos }: DataTableEm
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="px-6 py-4 text-center font-semibold">
+                  <TableHead
+                    key={header.id}
+                    className="px-6 py-4 text-center font-semibold"
+                  >
                     {header.isPlaceholder
                       ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -124,15 +160,24 @@ export function DataTableEmprestimos({ data, onRefreshEmprestimos }: DataTableEm
                   onClick={() => row.toggleSelected()}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="px-6 py-4 text-center">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <TableCell
+                      key={cell.id}
+                      className="px-6 py-4 text-center"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-blue-800">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center text-blue-800"
+                >
                   Sem resultados.
                 </TableCell>
               </TableRow>
@@ -148,10 +193,22 @@ export function DataTableEmprestimos({ data, onRefreshEmprestimos }: DataTableEm
           {table.getFilteredRowModel().rows.length} linha(s) selecionadas.
         </div>
         <div className="flex space-x-3">
-          <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="border-blue-600 text-blue-800 hover:bg-blue-400 shadow-md">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className="border-blue-600 text-blue-800 hover:bg-blue-400 shadow-md"
+          >
             Anterior
           </Button>
-          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} className="border-blue-600 text-blue-800 hover:bg-blue-400 shadow-md">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            className="border-blue-600 text-blue-800 hover:bg-blue-400 shadow-md"
+          >
             Próxima
           </Button>
         </div>

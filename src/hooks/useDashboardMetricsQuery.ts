@@ -25,4 +25,16 @@ export function useTotalUsuariosQuery() {
   });
 }
 
+export function useTotalEmprestimosAtivosQuery() {
+  return useSuspenseQuery({
+    queryKey: ["totalEmprestimos"],
+    queryFn: async () => {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKENDURL}/dashboard-metrics`);
+      if (!response.ok) throw new Error("Erro ao buscar total de empréstimos");
+      const data = await response.json();
+      return data.totalEmprestimos;
+    },
+  });
+}
+
 

@@ -17,6 +17,7 @@ import { useNavigate } from "react-router";
 export interface Livro {
   id: number;
   titulo: string;
+  categorias: string;
   autores: string;
   editora: string;
   anoPublicacao: number;
@@ -65,6 +66,19 @@ export function useLivrosColumns(): ColumnDef<Livro>[] {
       cell: ({ row }) => <div className="text-center font-medium">{row.getValue("titulo")}</div>,
     },
     {
+      accessorKey: "categorias",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Categorias
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => <div className="text-center">{row.getValue("categorias")}</div>,
+    },
+    {
       accessorKey: "autores",
       header: ({ column }) => (
         <Button
@@ -102,6 +116,12 @@ export function useLivrosColumns(): ColumnDef<Livro>[] {
         </Button>
       ),
       cell: ({ row }) => <div className="text-center">{row.getValue("anoPublicacao")}</div>,
+
+      // 👇 Esta função permite comparar string com número
+      filterFn: (row, columnId, filterValue) => {
+        const value = row.getValue(columnId);
+        return String(value).includes(String(filterValue));
+      },
     },
     {
       accessorKey: "edicao",

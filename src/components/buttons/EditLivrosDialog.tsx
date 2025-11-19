@@ -16,6 +16,7 @@ export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDia
   const { user } = useAuth(); 
   const [open, setOpen] = useState(false);
   const [titulo, setTitulo] = useState("");
+  const [categorias, setCategorias] = useState("");
   const [autores, setAutores] = useState("");
   const [anoPublicacao, setAnoPublicacao] = useState("");
   const [editora, setEditora] = useState("");
@@ -26,6 +27,7 @@ export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDia
     setOpen(isOpen);
     if (isOpen && selectedLivro) {
       setTitulo(selectedLivro.titulo);
+      setCategorias(selectedLivro.categorias);
       setAutores(selectedLivro.autores);
       setAnoPublicacao(selectedLivro.anoPublicacao.toString());
       setEditora(selectedLivro.editora || "");
@@ -43,6 +45,7 @@ export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDia
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           titulo,
+          categorias,
           autores,
           anoPublicacao: parseInt(anoPublicacao, 10),
           editora,
@@ -85,6 +88,14 @@ export function EditLivrosDialog({ selectedLivro, onLivroUpdated }: EditLivroDia
               placeholder="Título"
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label>Categorias</Label>
+            <Input
+              placeholder="Categorias"
+              value={categorias}
+              onChange={(e) => setCategorias(e.target.value)}
             />
           </div>
           <div className="grid gap-2">

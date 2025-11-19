@@ -43,7 +43,7 @@ export default function LoadUserPage() {
   }, [navigate, setUser]);
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center min-h-screen">
       <p className="text-blue-800 text-lg font-medium">Carregando informações do usuário...</p>
     </div>
   );
